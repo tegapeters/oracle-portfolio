@@ -156,7 +156,7 @@ export default function Page() {
           </span>
           <nav style={{ display: "flex", gap: 28, alignItems: "center" }}>
             {(["Work", "Architecture", "AI Systems", "Skills", "Resume"] as const).map((label) => {
-              const href = label === "Resume" ? "mailto:Tegapeters11@gmail.com"
+              const href = label === "Resume" ? "#contact"
                 : label === "Work" ? "#work"
                 : label === "Architecture" ? "#architecture"
                 : label === "Skills" ? "#skills"
