@@ -86,6 +86,39 @@ const CAPS = [
   "Slack", "Executive reporting",
 ];
 
+const INVESTIGATION_STEPS = [
+  { label: "Trigger",        detail: "Operational question or incident signal received — scope is defined before any source retrieval begins." },
+  { label: "Scope check",    detail: "Skill enforces what applies: event type, reporting window, affected accounts, and which sources are valid for this investigation." },
+  { label: "Source pull",    detail: "Connector retrieves read-only records from Jira, Slack, Confluence, and service telemetry — only approved sources, no hallucination fill-in." },
+  { label: "Evidence bundle", detail: "Retrieved records are assembled and structured. If a required source is missing or incomplete, the skill flags it rather than proceeding." },
+  { label: "AI draft",       detail: "Investigation document is generated from the evidence bundle only — scope, timeline, signals, open questions, and recommended actions." },
+  { label: "Review gate",    detail: "Human reviews the draft, approves, adds judgment, or requests revision. No output leaves this stage without an accountable sign-off." },
+  { label: "Artifact",       detail: "Approved investigation document is published to Confluence or handed to the operator for downstream action." },
+];
+
+const SKILL_CATALOG = [
+  {
+    name: "Postmortem Builder",
+    tag: "INCIDENT REVIEW",
+    desc: "Structured postmortem from incident signals. Assembles timeline, impact scope, contributing factors, and action items from Jira, Slack, and event data. Human review before distribution.",
+  },
+  {
+    name: "Executive Summary Builder",
+    tag: "LEADERSHIP COMMS",
+    desc: "Leadership-ready incident summary with context, scope, customer impact, and resolution path. Scoped strictly to verified signals — no speculation included.",
+  },
+  {
+    name: "Event Management Triage",
+    tag: "OPERATIONAL RESPONSE",
+    desc: "Classifies incoming operational signals, routes to the correct response path, and assembles an initial evidence bundle to reduce investigation startup time.",
+  },
+  {
+    name: "Ticket Quality Review",
+    tag: "QUALITY CONTROL",
+    desc: "Checks ticket completeness, classification accuracy, and required fields before escalation or closure. Flags gaps for operator resolution rather than auto-closing.",
+  },
+];
+
 const SOURCES = ["Account & commerce eligibility", "Operational event impacts", "Ticketing metadata", "Reporting configuration"];
 const OUTPUTS = ["Availability / bracket views", "Event / impact summaries", "Excel-compatible workbook"];
 const PIPE_STAGES = [
@@ -122,10 +155,11 @@ export default function Page() {
             TEGA ESHARETURI
           </span>
           <nav style={{ display: "flex", gap: 28, alignItems: "center" }}>
-            {(["Work", "Architecture", "AI Systems", "Resume"] as const).map((label) => {
+            {(["Work", "Architecture", "AI Systems", "Skills", "Resume"] as const).map((label) => {
               const href = label === "Resume" ? "mailto:Tegapeters11@gmail.com"
                 : label === "Work" ? "#work"
                 : label === "Architecture" ? "#architecture"
+                : label === "Skills" ? "#skills"
                 : "#ai-systems";
               return (
                 <a key={label} href={href} style={{ fontFamily: S.mono, fontSize: 11, letterSpacing: "0.1em", color: S.dim, textDecoration: "none" }}>
@@ -434,6 +468,116 @@ export default function Page() {
           </div>
         </section>
 
+        {/* ── SKILLS IN PRODUCTION ── */}
+        <section style={{ padding: "100px 0", borderBottom: `1px solid ${S.border}` }} id="skills">
+          <div style={wrap()}>
+            <div style={{ ...tagStyle(), marginBottom: 14 }}>// SKILLS IN PRODUCTION</div>
+            <h2 style={{ fontSize: "clamp(22px,3vw,36px)", fontWeight: 300, letterSpacing: "-0.02em", marginBottom: 24, color: S.fg }}>
+              The Unified Investigation Builder
+            </h2>
+            <p style={{ fontSize: 16, color: S.dim, lineHeight: 1.8, maxWidth: 680, marginBottom: 56 }}>
+              A skill is not a prompt. It is an executable playbook: it defines when the workflow applies, which
+              sources are valid, what the AI is allowed to infer versus what it must retrieve, what artifact is
+              produced, and where a human must review before anything ships. The Investigation Builder is the
+              most complete example of this pattern in my current skill set.
+            </p>
+
+            {/* Featured: Investigation Builder anatomy */}
+            <div style={{ ...cardStyle({ marginBottom: 48, padding: 0, overflow: "hidden" }) }}>
+              {/* header bar */}
+              <div style={{
+                background: S.surface, borderBottom: `1px solid ${S.border}`,
+                padding: "18px 28px", display: "flex", alignItems: "center", justifyContent: "space-between",
+              }}>
+                <div>
+                  <div style={{ fontFamily: S.mono, fontSize: 10, color: S.accent, letterSpacing: "0.12em", marginBottom: 4 }}>
+                    UNIFIED INVESTIGATION BUILDER · SKILL ANATOMY
+                  </div>
+                  <div style={{ fontSize: 15, fontWeight: 500, color: S.fg }}>
+                    From operational signal to approved investigation artifact
+                  </div>
+                </div>
+                <div style={{
+                  fontFamily: S.mono, fontSize: 10, padding: "4px 12px", borderRadius: 12,
+                  border: "1px solid rgba(91,163,245,0.35)", color: S.accent,
+                  background: "rgba(91,163,245,0.07)", letterSpacing: "0.1em",
+                }}>
+                  ACTIVE
+                </div>
+              </div>
+
+              {/* step-by-step anatomy */}
+              <div style={{ padding: "28px" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(7,1fr)", gap: 0, position: "relative" }} className="skill-steps">
+                  {/* connector line */}
+                  <div aria-hidden="true" style={{
+                    position: "absolute", top: 19, left: "calc(100% / 14)", right: "calc(100% / 14)",
+                    height: 1, background: `linear-gradient(to right, ${S.accent}, rgba(91,163,245,0.2))`,
+                    pointerEvents: "none",
+                  }} />
+
+                  {INVESTIGATION_STEPS.map((step, i) => (
+                    <div key={step.label} style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "0 8px", textAlign: "center" }}>
+                      {/* node */}
+                      <div style={{
+                        width: 38, height: 38, borderRadius: "50%", flexShrink: 0, zIndex: 1, marginBottom: 14,
+                        background: i === 5 ? "rgba(91,163,245,0.15)" : S.card,
+                        border: i === 5 ? "1.5px solid rgba(91,163,245,0.6)" : `1px solid ${S.border}`,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        fontFamily: S.mono, fontSize: 10, color: i === 5 ? S.accent : S.dimmer,
+                        fontWeight: i === 5 ? 700 : 400,
+                      }}>
+                        {String(i + 1).padStart(2, "0")}
+                      </div>
+                      {/* label */}
+                      <div style={{ fontFamily: S.mono, fontSize: 10, color: i === 5 ? S.accent : S.dim, letterSpacing: "0.08em", marginBottom: 8, lineHeight: 1.3 }}>
+                        {step.label}
+                      </div>
+                      {/* detail */}
+                      <div style={{ fontSize: 11, color: S.dimmer, lineHeight: 1.6 }}>
+                        {step.detail}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* what makes it a skill, not a prompt */}
+              <div style={{ borderTop: `1px solid ${S.border}`, padding: "20px 28px", display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 20 }} className="skill-props">
+                {[
+                  { label: "Source boundary", val: "Jira · Slack · Confluence · Service telemetry — read-only, pre-approved" },
+                  { label: "Inference rule",   val: "Evidence only — missing source triggers a flag, not a guess" },
+                  { label: "Review gate",      val: "No artifact leaves the skill without human approval and sign-off" },
+                ].map((row) => (
+                  <div key={row.label}>
+                    <div style={{ fontFamily: S.mono, fontSize: 10, color: S.accent, letterSpacing: "0.1em", marginBottom: 6 }}>{row.label}</div>
+                    <div style={{ fontSize: 13, color: S.dim, lineHeight: 1.6 }}>{row.val}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Skill catalog */}
+            <div style={{ ...tagStyle(), marginBottom: 20 }}>SKILL CATALOG</div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 16 }} className="controls-grid">
+              {SKILL_CATALOG.map((s) => (
+                <div key={s.name} style={cardStyle({ display: "flex", flexDirection: "column", gap: 12 })}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+                    <div style={{ fontSize: 15, fontWeight: 500, color: S.fg }}>{s.name}</div>
+                    <div style={{
+                      fontFamily: S.mono, fontSize: 9, padding: "3px 10px", borderRadius: 10,
+                      border: `1px solid ${S.border}`, color: S.dimmer, letterSpacing: "0.1em", whiteSpace: "nowrap",
+                    }}>
+                      {s.tag}
+                    </div>
+                  </div>
+                  <p style={{ fontSize: 14, color: S.dim, lineHeight: 1.7 }}>{s.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* ── PRINCIPLES ── */}
         <section style={{ padding: "100px 0", borderBottom: `1px solid ${S.border}` }}>
           <div style={wrap()}>
@@ -508,9 +652,12 @@ export default function Page() {
           .controls-grid    { grid-template-columns: 1fr !important; }
           .ai-grid          { grid-template-columns: 1fr !important; }
           .principles-grid  { grid-template-columns: 1fr 1fr !important; }
+          .skill-steps      { grid-template-columns: repeat(3,1fr) !important; }
+          .skill-props      { grid-template-columns: 1fr !important; }
         }
         @media (max-width: 540px) {
           .principles-grid  { grid-template-columns: 1fr !important; }
+          .skill-steps      { grid-template-columns: repeat(2,1fr) !important; }
         }
         a { transition: opacity 0.2s; }
         a:hover { opacity: 0.8; }
