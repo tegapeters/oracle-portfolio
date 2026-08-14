@@ -80,10 +80,47 @@ const PRINCIPLES = [
 ];
 
 const CAPS = [
-  "Python", "SQL", "ETL / ELT", "Data-quality validation", "Reconciliation",
-  "Excel / XLSX automation", "OCI", "Oracle Analytics", "GenAI workflow design",
-  "Custom GPTs", "Skills", "MCP / enterprise connectors", "Jira", "Confluence",
-  "Slack", "Executive reporting",
+  // Data Engineering
+  "Python", "SQL", "Pandas", "PySpark", "OpenPyXL", "python-oracledb",
+  "ETL / ELT", "Runtime configuration", "Data-quality validation", "Reconciliation",
+  "Immutable snapshots", "Current views", "CSV / JSON / XLSX generation", "CLI / GUI tooling",
+  // OCI & Data Platform
+  "Oracle Cloud Infrastructure", "Autonomous Database Serverless", "Oracle APEX",
+  "mTLS wallet authentication", "OCI Data Flow", "OCI Data Science", "OCI Generative AI",
+  "Oracle Analytics Cloud", "NetSuite", "Supabase", "Google BigQuery",
+  // Agentic AI & Automation
+  "Reusable skill design", "Plugin / connector orchestration", "MCP",
+  "Source provenance", "Human-in-the-loop approval", "LLM implementation",
+  "RAG concepts", "Model-lifecycle tracking",
+  // Reporting & BI
+  "Uptime & reliability reporting", "CIM reconciliation", "MOR readiness",
+  "Service-availability analysis", "Power BI", "Tableau", "Excel / XLSX automation",
+  // Enterprise & Delivery
+  "Jira", "Confluence", "Slack", "NetSuite Hub", "Event Assessment data",
+  "Agile", "Scrum", "Incident response", "RCA support",
+];
+
+const CLOUD_PROOF_CARDS = [
+  { n: "1", title: "Validated run to cloud view", body: "A successful Python run writes an immutable database snapshot and refreshes latest-state views consumed by APEX without rebuilding the UI." },
+  { n: "2", title: "One owner for each fact", body: "Hub Assessments own identity and CIM; Jira owns narrative, support-case, and team metadata; the uptime pipeline owns availability." },
+  { n: "3", title: "Readiness, not false certainty", body: "PASS, REVIEW, BLOCKED, and CONTEXT separate publishable results, human-review work, blockers, and audit context." },
+  { n: "4", title: "Private by default", body: "A dedicated schema, mTLS wallet, Keychain-backed secret retrieval, and authenticated APEX access protect the POC." },
+];
+
+const CLOUD_ARCH_STEPS = [
+  { label: "Hub Event Assessments\n+ Jira + ACL/uptime inputs", sub: "Evidence sources" },
+  { label: "Python skills\nand monthly runbook", sub: "Automation" },
+  { label: "Validation, reconciliation\n+ publication gates", sub: "Governance" },
+  { label: "python-oracledb\nloader", sub: "Secure loader" },
+  { label: "OCI Autonomous Database\nimmutable runs + current views", sub: "OCI data layer" },
+  { label: "Oracle APEX\noperator application", sub: "Operator UI" },
+];
+
+const CLOUD_PAGES = [
+  { name: "Uptime Overview", description: "Latest CIM, Assessment count, month-to-date uptime, refresh time, and Assessment-level event detail." },
+  { name: "MOR Readiness", description: "Publication gate, coverage, contextual difference, Top 5 CIM/cases, and open gate results." },
+  { name: "MOR Gaps Breakdown", description: "Priority, gap reason, evidence, missing fields, process warning, and required action." },
+  { name: "Snapshot History", description: "Immutable refresh history and the foundation for finalized monthly trend reporting." },
 ];
 
 const INVESTIGATION_STEPS = [
@@ -117,6 +154,26 @@ const SKILL_CATALOG = [
     tag: "QUALITY CONTROL",
     desc: "Checks ticket completeness, classification accuracy, and required fields before escalation or closure. Flags gaps for operator resolution rather than auto-closing.",
   },
+  {
+    name: "Automated Ticket Creation",
+    tag: "WRITE · JIRA",
+    desc: "Drafts and submits Jira tickets for bugs, builder improvements, and documentation gaps — pre-populated with summary, description, component, priority, and acceptance criteria derived from investigation evidence. Operator confirms field values before submission; no ticket is created without explicit approval.",
+  },
+];
+
+const CERTS = [
+  { name: "OCI Data Science Professional", year: "2026", issuer: "Oracle" },
+  { name: "OCI Generative AI Professional", year: "2025", issuer: "Oracle" },
+  { name: "OCI AI Foundations Associate", year: "2025", issuer: "Oracle" },
+  { name: "OCI Data Management Foundations Associate", year: "2024", issuer: "Oracle" },
+  { name: "OCI Foundations Associate", year: "2024", issuer: "Oracle" },
+  { name: "Professional Scrum Product Owner II", year: "2023", issuer: "Scrum.org" },
+  { name: "Professional Scrum Product Owner I", year: "2023", issuer: "Scrum.org" },
+  { name: "Professional Scrum Master II", year: "2023", issuer: "Scrum.org" },
+  { name: "Professional Scrum Master I", year: "2023", issuer: "Scrum.org" },
+  { name: "Artificial Intelligence Essentials", year: "2023", issuer: "EXIN" },
+  { name: "Cloud Computing Foundations", year: "2022", issuer: "EXIN" },
+  { name: "IT Information Library Foundations", year: "2022", issuer: "ITIL" },
 ];
 
 const SOURCES = ["Account & commerce eligibility", "Operational event impacts", "Ticketing metadata", "Reporting configuration"];
@@ -155,18 +212,21 @@ export default function Page() {
             TEGA ESHARETURI
           </span>
           <nav style={{ display: "flex", gap: 28, alignItems: "center" }}>
-            {(["Work", "Architecture", "AI Systems", "Skills", "Resume"] as const).map((label) => {
-              const href = label === "Resume" ? "#contact"
-                : label === "Work" ? "#work"
-                : label === "Architecture" ? "#architecture"
-                : label === "Skills" ? "#skills"
-                : "#ai-systems";
-              return (
-                <a key={label} href={href} style={{ fontFamily: S.mono, fontSize: 11, letterSpacing: "0.1em", color: S.dim, textDecoration: "none" }}>
-                  {label}
-                </a>
-              );
-            })}
+            <div className="nav-links" style={{ display: "flex", gap: 28, alignItems: "center" }}>
+              {(["Work", "Architecture", "Cloud Platform", "AI Systems", "Skills", "Resume"] as const).map((label) => {
+                const href = label === "Resume" ? "#contact"
+                  : label === "Work" ? "#work"
+                  : label === "Architecture" ? "#architecture"
+                  : label === "Cloud Platform" ? "#cloud-platform"
+                  : label === "Skills" ? "#skills"
+                  : "#ai-systems";
+                return (
+                  <a key={label} href={href} style={{ fontFamily: S.mono, fontSize: 11, letterSpacing: "0.1em", color: S.dim, textDecoration: "none" }}>
+                    {label}
+                  </a>
+                );
+              })}
+            </div>
             <a href="#contact" style={{
               fontFamily: S.mono, fontSize: 11, letterSpacing: "0.1em", padding: "7px 18px",
               borderRadius: 4, background: S.accent, color: S.bg, textDecoration: "none", fontWeight: 600,
@@ -177,6 +237,27 @@ export default function Page() {
         </div>
       </header>
 
+      {/* ── MOBILE SUB-NAV ── */}
+      <div className="mobile-subnav" style={{
+        display: "none", overflowX: "auto", borderBottom: `1px solid ${S.border}`,
+        background: "rgba(11,15,26,0.96)",
+        WebkitOverflowScrolling: "touch" as React.CSSProperties["WebkitOverflowScrolling"],
+      }}>
+        <div style={{ display: "flex", gap: 0, padding: "0 16px", whiteSpace: "nowrap" }}>
+          {([
+            ["Work", "#work"], ["Architecture", "#architecture"], ["Cloud Platform", "#cloud-platform"],
+            ["AI Systems", "#ai-systems"], ["Skills", "#skills"], ["Resume", "#contact"],
+          ] as const).map(([label, href]) => (
+            <a key={label} href={href} style={{
+              fontFamily: S.mono, fontSize: 11, letterSpacing: "0.08em", color: S.dim,
+              textDecoration: "none", padding: "10px 14px", display: "block",
+            }}>
+              {label}
+            </a>
+          ))}
+        </div>
+      </div>
+
       <main>
 
         {/* ── HERO ── */}
@@ -184,16 +265,18 @@ export default function Page() {
           <div style={{ ...wrap(), display: "grid", gridTemplateColumns: "1fr 300px", gap: 60, alignItems: "center" }} className="hero-grid">
             <div>
               <div style={{ ...tagStyle({ color: S.accent }), marginBottom: 24 }}>
-                DATA ENGINEERING · GOVERNED GENAI · EXECUTIVE REPORTING
+                DATA ENGINEERING · UPTIME &amp; RELIABILITY AUTOMATION · OCI ANALYTICS · GOVERNED GENAI WORKFLOWS
               </div>
               <h1 style={{ fontSize: "clamp(32px,4vw,52px)", fontWeight: 300, lineHeight: 1.2, letterSpacing: "-0.025em", marginBottom: 28, color: S.fg }}>
                 Operational systems that turn fragmented evidence into{" "}
                 <em style={{ fontStyle: "italic", color: S.accent }}>decision-ready insight.</em>
               </h1>
               <p style={{ fontSize: 16, color: S.dim, lineHeight: 1.8, maxWidth: 540, marginBottom: 36 }}>
-                I design operational data and AI systems that make critical reporting faster, more traceable, and
-                easier to trust. My work at Oracle spans Python data pipelines, reconciliation controls, executive
-                reporting, and source-grounded GenAI workflows with human approval built in.
+                Data engineer specializing in production analytics automation, cloud-delivered operational
+                intelligence, and governed GenAI workflows at Oracle. Builds Python/SQL pipelines,
+                reconciliation controls, and secure OCI analytics applications that turn Jira, service
+                telemetry, Event Assessment, Slack, and Confluence evidence into trusted uptime reporting
+                and source-backed incident artifacts.
               </p>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
                 {[
@@ -228,6 +311,22 @@ export default function Page() {
                 </div>
               ))}
               <p style={{ ...tagStyle({ fontSize: 10, marginTop: 8 }) }}>// abstracted · not real system names</p>
+            </div>
+          </div>
+        </section>
+
+        {/* ── MISSION CONTEXT ── */}
+        <section style={{ padding: "40px 0", borderBottom: `1px solid ${S.border}`, background: "rgba(91,163,245,0.03)" }}>
+          <div style={wrap()}>
+            <div style={{ maxWidth: 780, borderLeft: `3px solid ${S.accent}`, paddingLeft: 24 }}>
+              <div style={{ ...tagStyle({ color: S.accent, marginBottom: 12 }) }}>// ORGANIZATIONAL CONTEXT</div>
+              <p style={{ fontSize: 15, color: S.fg, lineHeight: 1.85 }}>
+                The mission is unambiguous: 99.99% customer uptime — four nines, no exceptions. Working within
+                Oracle&rsquo;s Cloud Service Improvement Organization (CSIO, formerly NetSuite Cloud Ops), teams
+                coordinate cloud event response and structured postmortems to ensure customer databases stay
+                active and incidents stay contained. This portfolio documents the data engineering and AI systems
+                built to support that standard.
+              </p>
             </div>
           </div>
         </section>
@@ -407,6 +506,96 @@ export default function Page() {
           </div>
         </section>
 
+        {/* ── CLOUD PLATFORM ── */}
+        <section style={{ padding: "100px 0", borderBottom: `1px solid ${S.border}` }} id="cloud-platform">
+          <div style={wrap()}>
+            <div style={{ ...tagStyle({ color: S.accent }), marginBottom: 14 }}>DEPLOYED CLOUD ANALYTICS POC</div>
+            <h2 style={{ fontSize: "clamp(26px,3.5vw,42px)", fontWeight: 300, letterSpacing: "-0.02em", lineHeight: 1.2, marginBottom: 24, color: S.fg }}>
+              From monthly automation to an operator-facing OCI control plane.
+            </h2>
+            <p style={{ fontSize: 16, color: S.dim, lineHeight: 1.8, maxWidth: 720, marginBottom: 56 }}>
+              I extended the Python uptime pipeline into a secure OCI application that loads every validated run
+              into Autonomous Database Serverless and exposes current uptime, MOR publication readiness,
+              gap drill-down, and snapshot history through Oracle APEX. The result is a governed, run-triggered
+              data path from source evidence to an authenticated decision interface.
+            </p>
+
+            {/* Proof cards */}
+            <div style={{ ...tagStyle(), marginBottom: 20 }}>PROOF POINTS</div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 20, marginBottom: 56 }} className="controls-grid">
+              {CLOUD_PROOF_CARDS.map((c) => (
+                <div key={c.n} style={cardStyle({ display: "flex", gap: 16 })}>
+                  <div style={{
+                    width: 28, height: 28, borderRadius: "50%", flexShrink: 0,
+                    background: "rgba(91,163,245,0.1)", border: "1px solid rgba(91,163,245,0.3)",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    fontFamily: S.mono, fontSize: 11, color: S.accent, fontWeight: 700,
+                  }}>{c.n}</div>
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: S.fg, marginBottom: 6 }}>{c.title}</div>
+                    <div style={{ fontSize: 14, color: S.dim, lineHeight: 1.7 }}>{c.body}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Architecture flow */}
+            <div style={{ marginBottom: 48 }}>
+              <div style={{ ...tagStyle(), marginBottom: 20 }}>A CONTROLLED DATA PATH FROM EVIDENCE TO DECISION</div>
+              <div
+                role="img"
+                aria-label="Six-stage data flow: Hub Event Assessments, Jira, ACL and uptime inputs feed into Python skills and monthly runbook, then validation reconciliation and publication gates, then python-oracledb loader over mTLS, then OCI Autonomous Database with immutable runs and current views, then Oracle APEX operator application."
+                style={{ background: S.surface, border: `1px solid ${S.border}`, borderRadius: 8, padding: "28px 24px", overflowX: "auto" }}
+              >
+                <div style={{ display: "flex", alignItems: "stretch", minWidth: 860 }}>
+                  {CLOUD_ARCH_STEPS.map((step, i) => (
+                    <div key={i} style={{ display: "flex", alignItems: "center" }}>
+                      <div style={{
+                        padding: "16px 14px", borderRadius: 6,
+                        border: "1px solid rgba(91,163,245,0.35)", background: "rgba(91,163,245,0.06)",
+                        textAlign: "center", lineHeight: 1.5, width: 130, flexShrink: 0,
+                      }}>
+                        <div style={{ fontFamily: S.mono, fontSize: 9, color: S.accent, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 8 }}>{step.sub}</div>
+                        <div style={{ fontSize: 11, color: S.fg, whiteSpace: "pre-line" }}>{step.label}</div>
+                      </div>
+                      {i < CLOUD_ARCH_STEPS.length - 1 && (
+                        <div style={{ color: S.accent, fontSize: 16, padding: "0 8px", flexShrink: 0 }}>→</div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <p style={{ fontFamily: S.mono, fontSize: 12, color: S.dimmer, marginTop: 14, lineHeight: 1.6 }}>
+                The feed is on demand and run-triggered — not an event-streaming claim. Each accepted run is preserved
+                for traceability while current views give the application a stable contract for the latest validated state.
+              </p>
+            </div>
+
+            {/* Operator pages */}
+            <div style={{ marginBottom: 48 }}>
+              <div style={{ ...tagStyle(), marginBottom: 20 }}>FOUR PAGES, ONE OPERATIONAL STORY</div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 16 }} className="controls-grid">
+                {CLOUD_PAGES.map((pg) => (
+                  <div key={pg.name} style={cardStyle()}>
+                    <div style={{ fontSize: 15, fontWeight: 500, color: S.fg, marginBottom: 8 }}>{pg.name}</div>
+                    <p style={{ fontSize: 14, color: S.dim, lineHeight: 1.7 }}>{pg.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Scope note */}
+            <div style={{ ...cardStyle({ borderLeft: `3px solid ${S.border}`, borderRadius: "0 8px 8px 0" }) }}>
+              <div style={{ ...tagStyle({ marginBottom: 12 }) }}>DELIBERATE POC BOUNDARIES</div>
+              <p style={{ fontSize: 15, color: S.dim, lineHeight: 1.8 }}>
+                This is an authenticated OCI Always Free proof of concept, not an externally exposed production service.
+                Monthly values remain preliminary until source data is locked. The design proves the data contract,
+                control model, secure connection path, and operator workflow needed for a governed internal deployment.
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* ── AI SYSTEMS ── */}
         <section style={{ padding: "100px 0", borderBottom: `1px solid ${S.border}` }} id="ai-systems">
           <div style={wrap()}>
@@ -543,11 +732,12 @@ export default function Page() {
               </div>
 
               {/* what makes it a skill, not a prompt */}
-              <div style={{ borderTop: `1px solid ${S.border}`, padding: "20px 28px", display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 20 }} className="skill-props">
+              <div style={{ borderTop: `1px solid ${S.border}`, padding: "20px 28px", display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 20 }} className="skill-props">
                 {[
-                  { label: "Source boundary", val: "Jira · Slack · Confluence · Service telemetry — read-only, pre-approved" },
+                  { label: "Source boundary", val: "Jira · Slack · Confluence · Service telemetry — read-only retrieval, pre-approved sources only" },
+                  { label: "Write capability", val: "Can draft and submit Jira tickets (bugs, improvements, docs) — fields pre-populated from evidence, operator approves before any write" },
                   { label: "Inference rule",   val: "Evidence only — missing source triggers a flag, not a guess" },
-                  { label: "Review gate",      val: "No artifact leaves the skill without human approval and sign-off" },
+                  { label: "Review gate",      val: "No artifact or ticket leaves the skill without human approval and explicit sign-off" },
                 ].map((row) => (
                   <div key={row.label}>
                     <div style={{ fontFamily: S.mono, fontSize: 10, color: S.accent, letterSpacing: "0.1em", marginBottom: 6 }}>{row.label}</div>
@@ -606,6 +796,34 @@ export default function Page() {
           </div>
         </section>
 
+        {/* ── CERTIFICATIONS ── */}
+        <section style={{ padding: "72px 0", borderBottom: `1px solid ${S.border}` }}>
+          <div style={wrap()}>
+            <div style={{ ...tagStyle(), marginBottom: 28 }}>// CERTIFICATIONS</div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 12 }} className="cert-grid">
+              {CERTS.map((c) => (
+                <div key={c.name} style={{
+                  display: "flex", alignItems: "flex-start", gap: 14,
+                  padding: "16px 20px", borderRadius: 6,
+                  border: `1px solid ${S.border}`, background: S.card,
+                }}>
+                  <div style={{
+                    flexShrink: 0, marginTop: 2,
+                    width: 6, height: 6, borderRadius: "50%",
+                    background: S.accent,
+                  }} />
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 500, color: S.fg, lineHeight: 1.4, marginBottom: 4 }}>{c.name}</div>
+                    <div style={{ fontFamily: S.mono, fontSize: 10, color: S.dimmer, letterSpacing: "0.08em" }}>
+                      {c.issuer} · {c.year}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* ── CONTACT ── */}
         <section style={{ padding: "120px 0" }} id="contact">
           <div style={{ ...wrap(), maxWidth: 600, textAlign: "center" }}>
@@ -619,8 +837,8 @@ export default function Page() {
               and safer to scale.
             </p>
             <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-              <a href="#" style={{ fontFamily: S.mono, fontSize: 12, letterSpacing: "0.08em", padding: "11px 22px", borderRadius: 4, border: `1px solid ${S.border}`, color: S.fg, textDecoration: "none" }}>
-                Download résumé
+              <a href="/resume.pdf" download style={{ fontFamily: S.mono, fontSize: 12, letterSpacing: "0.08em", padding: "11px 22px", borderRadius: 4, border: `1px solid ${S.border}`, color: S.fg, textDecoration: "none" }}>
+                Download updated résumé
               </a>
               <a href="https://github.com/tegapeters/ai-portfolio" target="_blank" rel="noopener noreferrer"
                 style={{ fontFamily: S.mono, fontSize: 12, letterSpacing: "0.08em", padding: "11px 22px", borderRadius: 4, border: `1px solid ${S.border}`, color: S.fg, textDecoration: "none" }}>
@@ -654,10 +872,14 @@ export default function Page() {
           .principles-grid  { grid-template-columns: 1fr 1fr !important; }
           .skill-steps      { grid-template-columns: repeat(3,1fr) !important; }
           .skill-props      { grid-template-columns: 1fr !important; }
+          .cert-grid        { grid-template-columns: 1fr 1fr !important; }
+          .nav-links        { display: none !important; }
+          .mobile-subnav    { display: block !important; }
         }
         @media (max-width: 540px) {
           .principles-grid  { grid-template-columns: 1fr !important; }
           .skill-steps      { grid-template-columns: repeat(2,1fr) !important; }
+          .cert-grid        { grid-template-columns: 1fr !important; }
         }
         a { transition: opacity 0.2s; }
         a:hover { opacity: 0.8; }
