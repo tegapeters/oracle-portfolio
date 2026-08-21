@@ -4,7 +4,7 @@
    All copy lives in the DATA section below. No confidential data exposed.
 ───────────────────────────────────────────────────────────────────────────── */
 
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import type { CSSProperties } from "react";
 
 const S = {
@@ -701,17 +701,17 @@ export default function Page() {
             {/* 3-card evolution */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 28px 1fr 28px 1fr", gap: 0, alignItems: "start", marginBottom: 56 }} className="ai-grid">
               {AI_CARDS.map((c, i) => (
-                <>
-                  <div key={c.n} className="hover-card reveal" style={cardStyle()}>
+                <Fragment key={c.n}>
+                  <div className="hover-card reveal" style={cardStyle()}>
                     <div style={{ fontFamily: S.mono, fontSize: 10, color: S.accent, letterSpacing: "0.1em", marginBottom: 12 }}>0{c.n}</div>
                     <h3 style={{ fontSize: 15, fontWeight: 500, color: S.fg, lineHeight: 1.35, marginBottom: 14 }}>{c.title}</h3>
                     <p style={{ fontSize: 14, color: S.dim, lineHeight: 1.7, marginBottom: 16 }}>{c.body}</p>
                     <div style={{ fontFamily: S.mono, fontSize: 10, color: S.accent, letterSpacing: "0.06em", lineHeight: 1.5 }}>{c.strength}</div>
                   </div>
                   {i < 2 && (
-                    <div key={`arr-${i}`} style={{ display: "flex", alignItems: "center", justifyContent: "center", paddingTop: 56, color: S.accent, fontSize: 18 }}>→</div>
+                    <div className="ai-arrow" style={{ display: "flex", alignItems: "center", justifyContent: "center", paddingTop: 56, color: S.accent, fontSize: 18 }}>→</div>
                   )}
-                </>
+                </Fragment>
               ))}
             </div>
 
