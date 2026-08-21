@@ -317,7 +317,7 @@ export default function Page() {
             </button>
             <a href="#contact" className="connect-btn" style={{
               fontFamily: S.mono, fontSize: 11, letterSpacing: "0.1em", padding: "7px 18px",
-              borderRadius: 4, background: S.accent, color: S.bg, textDecoration: "none", fontWeight: 600,
+              borderRadius: 4, background: S.accent, color: "#1A1A1A", textDecoration: "none", fontWeight: 600,
             }}>
               Connect
             </a>
