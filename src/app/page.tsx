@@ -25,7 +25,7 @@ const pillStyle = (active?: boolean): CSSProperties => ({
   display: "inline-block", padding: "5px 14px", borderRadius: 20,
   border: `1px solid ${active ? S.accent : S.border}`,
   color: active ? S.accent : S.dim,
-  background: active ? "rgba(91,163,245,0.08)" : "transparent",
+  background: active ? "rgba(13,33,55,0.06)" : "transparent",
   fontFamily: S.mono, fontSize: 11, letterSpacing: "0.06em",
   whiteSpace: "nowrap",
 });
@@ -204,7 +204,7 @@ export default function Page() {
       {/* ── NAV ── */}
       <header style={{
         position: "sticky", top: 0, zIndex: 100,
-        background: "rgba(11,15,26,0.92)", backdropFilter: "blur(12px)",
+        background: "rgba(255,255,255,0.95)", backdropFilter: "blur(12px)",
         borderBottom: `1px solid ${S.border}`,
       }}>
         <div style={{ ...wrap(), display: "flex", alignItems: "center", justifyContent: "space-between", height: 60 }}>
@@ -240,7 +240,7 @@ export default function Page() {
       {/* ── MOBILE SUB-NAV ── */}
       <div className="mobile-subnav" style={{
         display: "none", overflowX: "auto", borderBottom: `1px solid ${S.border}`,
-        background: "rgba(11,15,26,0.96)",
+        background: "rgba(255,255,255,0.98)",
         WebkitOverflowScrolling: "touch" as React.CSSProperties["WebkitOverflowScrolling"],
       }}>
         <div style={{ display: "flex", gap: 0, padding: "0 16px", whiteSpace: "nowrap" }}>
@@ -261,7 +261,7 @@ export default function Page() {
       <main>
 
         {/* ── HERO ── */}
-        <section style={{ padding: "100px 0 80px", borderBottom: `1px solid ${S.border}` }}>
+        <section style={{ padding: "120px 0 100px", borderBottom: `1px solid ${S.border}` }}>
           <div style={{ ...wrap(), display: "grid", gridTemplateColumns: "1fr 300px", gap: 60, alignItems: "center" }} className="hero-grid">
             <div>
               <div style={{ ...tagStyle({ color: S.accent }), marginBottom: 24 }}>
@@ -284,7 +284,7 @@ export default function Page() {
                   "Python-first, Excel-compatible reporting",
                   "Source-grounded AI with human approval gates",
                 ].map((chip) => (
-                  <span key={chip} style={{ ...pillStyle(), border: "1px solid rgba(91,163,245,0.3)", color: "rgba(91,163,245,0.85)", background: "rgba(91,163,245,0.06)", fontSize: 12 }}>
+                  <span key={chip} style={{ ...pillStyle(), border: "1px solid rgba(13,33,55,0.2)", color: "rgba(13,33,55,0.85)", background: "rgba(13,33,55,0.05)", fontSize: 12 }}>
                     {chip}
                   </span>
                 ))}
@@ -302,10 +302,10 @@ export default function Page() {
               ].map(({ label, pct }, i) => (
                 <div key={label} style={{
                   height: 34, borderRadius: 4, width: pct,
-                  background: `rgba(91,163,245,${0.05 + i * 0.03})`,
-                  border: `1px solid rgba(91,163,245,${0.12 + i * 0.05})`,
+                  background: `rgba(13,33,55,${0.04 + i * 0.02})`,
+                  border: `1px solid rgba(13,33,55,${0.1 + i * 0.04})`,
                   display: "flex", alignItems: "center", padding: "0 12px",
-                  fontSize: 11, fontFamily: S.mono, color: `rgba(238,241,248,${0.35 + i * 0.1})`,
+                  fontSize: 11, fontFamily: S.mono, color: `rgba(10,10,10,${0.4 + i * 0.12})`,
                 }}>
                   {label}
                 </div>
@@ -316,7 +316,7 @@ export default function Page() {
         </section>
 
         {/* ── MISSION CONTEXT ── */}
-        <section style={{ padding: "40px 0", borderBottom: `1px solid ${S.border}`, background: "rgba(91,163,245,0.03)" }}>
+        <section style={{ padding: "48px 0", borderBottom: `1px solid ${S.border}`, background: "rgba(0,0,0,0.02)" }}>
           <div style={wrap()}>
             <div style={{ maxWidth: 780, borderLeft: `3px solid ${S.accent}`, paddingLeft: 24 }}>
               <div style={{ ...tagStyle({ color: S.accent, marginBottom: 12 }) }}>// ORGANIZATIONAL CONTEXT</div>
@@ -332,7 +332,7 @@ export default function Page() {
         </section>
 
         {/* ── IMPACT ── */}
-        <section style={{ padding: "64px 0", borderBottom: `1px solid ${S.border}` }} id="work">
+        <section style={{ padding: "88px 0", borderBottom: `1px solid ${S.border}` }} id="work">
           <div style={wrap()}>
             <div style={{ ...tagStyle(), marginBottom: 32 }}>// THE WORK IN ONE VIEW</div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 20 }} className="impact-grid">
@@ -348,7 +348,7 @@ export default function Page() {
         </section>
 
         {/* ── CASE STUDY ── */}
-        <section style={{ padding: "100px 0", borderBottom: `1px solid ${S.border}` }} id="architecture">
+        <section style={{ padding: "120px 0", borderBottom: `1px solid ${S.border}` }} id="architecture">
           <div style={wrap()}>
             <div style={{ ...tagStyle(), marginBottom: 14 }}>// FEATURED CASE STUDY</div>
             <h2 style={{ fontSize: "clamp(26px,3.5vw,42px)", fontWeight: 300, letterSpacing: "-0.02em", lineHeight: 1.2, marginBottom: 24, color: S.fg }}>
@@ -392,7 +392,7 @@ export default function Page() {
                     <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
                       <div style={{
                         padding: "14px 18px", borderRadius: 6, fontSize: 12, fontWeight: 500, color: S.fg,
-                        border: "1px solid rgba(91,163,245,0.35)", background: "rgba(91,163,245,0.06)",
+                        border: "1px solid rgba(13,33,55,0.2)", background: "rgba(13,33,55,0.05)",
                         textAlign: "center", whiteSpace: "pre-line", lineHeight: 1.5,
                       }}>
                         {stage.label}
@@ -404,7 +404,7 @@ export default function Page() {
                   <div style={{ color: S.accent, fontSize: 20, flexShrink: 0 }}>→</div>
                   <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                     {OUTPUTS.map((o) => (
-                      <div key={o} style={{ padding: "8px 14px", borderRadius: 4, fontSize: 12, color: S.accent, border: "1px solid rgba(91,163,245,0.3)", background: "rgba(91,163,245,0.05)", whiteSpace: "nowrap" }}>
+                      <div key={o} style={{ padding: "8px 14px", borderRadius: 4, fontSize: 12, color: S.accent, border: "1px solid rgba(13,33,55,0.18)", background: "rgba(13,33,55,0.04)", whiteSpace: "nowrap" }}>
                         {o}
                       </div>
                     ))}
@@ -441,7 +441,7 @@ export default function Page() {
                   <div key={c.n} style={cardStyle({ display: "flex", gap: 16 })}>
                     <div style={{
                       width: 28, height: 28, borderRadius: "50%", flexShrink: 0,
-                      background: "rgba(91,163,245,0.1)", border: "1px solid rgba(91,163,245,0.3)",
+                      background: "rgba(13,33,55,0.07)", border: "1px solid rgba(13,33,55,0.18)",
                       display: "flex", alignItems: "center", justifyContent: "center",
                       fontFamily: S.mono, fontSize: 11, color: S.accent, fontWeight: 700,
                     }}>
@@ -477,14 +477,14 @@ export default function Page() {
               From spreadsheet process to governed reporting platform
             </h2>
             <div style={{ position: "relative" }}>
-              <div style={{ position: "absolute", left: 19, top: 28, bottom: 28, width: 1, background: `linear-gradient(to bottom, ${S.accent}, rgba(91,163,245,0.08))` }} />
+              <div style={{ position: "absolute", left: 19, top: 28, bottom: 28, width: 1, background: `linear-gradient(to bottom, ${S.accent}, rgba(13,33,55,0.06))` }} />
               <div style={{ display: "flex", flexDirection: "column" }}>
                 {TIMELINE.map((t, i) => (
                   <div key={t.s} style={{ display: "grid", gridTemplateColumns: "48px 1fr", gap: 24, paddingBottom: i < TIMELINE.length - 1 ? 44 : 0 }}>
                     <div style={{ display: "flex", justifyContent: "center", paddingTop: 4 }}>
                       <div style={{
                         width: 38, height: 38, borderRadius: "50%", flexShrink: 0,
-                        border: "1px solid rgba(91,163,245,0.4)", background: "rgba(91,163,245,0.08)",
+                        border: "1px solid rgba(13,33,55,0.25)", background: "rgba(13,33,55,0.06)",
                         display: "flex", alignItems: "center", justifyContent: "center",
                         fontFamily: S.mono, fontSize: 11, color: S.accent, zIndex: 1,
                       }}>{t.s}</div>
@@ -497,7 +497,7 @@ export default function Page() {
                 ))}
               </div>
             </div>
-            <div style={{ marginTop: 56, padding: "24px 28px", borderLeft: `3px solid ${S.accent}`, background: "rgba(91,163,245,0.04)" }}>
+            <div style={{ marginTop: 56, padding: "24px 28px", borderLeft: `3px solid ${S.accent}`, background: "rgba(13,33,55,0.04)" }}>
               <p style={{ fontSize: 15, color: S.fg, lineHeight: 1.8, fontStyle: "italic" }}>
                 &ldquo;The design principle: preserve the business contract, remove fragile manual dependencies,
                 and make every important number traceable to an owned source and validation step.&rdquo;
@@ -527,7 +527,7 @@ export default function Page() {
                 <div key={c.n} style={cardStyle({ display: "flex", gap: 16 })}>
                   <div style={{
                     width: 28, height: 28, borderRadius: "50%", flexShrink: 0,
-                    background: "rgba(91,163,245,0.1)", border: "1px solid rgba(91,163,245,0.3)",
+                    background: "rgba(13,33,55,0.07)", border: "1px solid rgba(13,33,55,0.18)",
                     display: "flex", alignItems: "center", justifyContent: "center",
                     fontFamily: S.mono, fontSize: 11, color: S.accent, fontWeight: 700,
                   }}>{c.n}</div>
@@ -552,7 +552,7 @@ export default function Page() {
                     <div key={i} style={{ display: "flex", alignItems: "center" }}>
                       <div style={{
                         padding: "16px 14px", borderRadius: 6,
-                        border: "1px solid rgba(91,163,245,0.35)", background: "rgba(91,163,245,0.06)",
+                        border: "1px solid rgba(13,33,55,0.2)", background: "rgba(13,33,55,0.05)",
                         textAlign: "center", lineHeight: 1.5, width: 130, flexShrink: 0,
                       }}>
                         <div style={{ fontFamily: S.mono, fontSize: 9, color: S.accent, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 8 }}>{step.sub}</div>
@@ -640,8 +640,8 @@ export default function Page() {
                 ) : (
                   <div key={i} style={{
                     padding: "11px 22px", borderRadius: 6, fontSize: 13,
-                    border: node.accent ? "1px solid rgba(91,163,245,0.5)" : `1px solid ${S.border}`,
-                    background: node.accent ? "rgba(91,163,245,0.1)" : S.card,
+                    border: node.accent ? "1px solid rgba(13,33,55,0.3)" : `1px solid ${S.border}`,
+                    background: node.accent ? "rgba(13,33,55,0.07)" : S.card,
                     color: node.accent ? S.accent : S.fg,
                     width: node.wide ? "100%" : "auto", maxWidth: node.wide ? "100%" : 300,
                     textAlign: "center", lineHeight: 1.5,
@@ -688,8 +688,8 @@ export default function Page() {
                 </div>
                 <div style={{
                   fontFamily: S.mono, fontSize: 10, padding: "4px 12px", borderRadius: 12,
-                  border: "1px solid rgba(91,163,245,0.35)", color: S.accent,
-                  background: "rgba(91,163,245,0.07)", letterSpacing: "0.1em",
+                  border: "1px solid rgba(13,33,55,0.2)", color: S.accent,
+                  background: "rgba(13,33,55,0.05)", letterSpacing: "0.1em",
                 }}>
                   ACTIVE
                 </div>
@@ -701,7 +701,7 @@ export default function Page() {
                   {/* connector line */}
                   <div aria-hidden="true" style={{
                     position: "absolute", top: 19, left: "calc(100% / 14)", right: "calc(100% / 14)",
-                    height: 1, background: `linear-gradient(to right, ${S.accent}, rgba(91,163,245,0.2))`,
+                    height: 1, background: `linear-gradient(to right, ${S.accent}, rgba(13,33,55,0.14))`,
                     pointerEvents: "none",
                   }} />
 
@@ -710,8 +710,8 @@ export default function Page() {
                       {/* node */}
                       <div style={{
                         width: 38, height: 38, borderRadius: "50%", flexShrink: 0, zIndex: 1, marginBottom: 14,
-                        background: i === 5 ? "rgba(91,163,245,0.15)" : S.card,
-                        border: i === 5 ? "1.5px solid rgba(91,163,245,0.6)" : `1px solid ${S.border}`,
+                        background: i === 5 ? "rgba(13,33,55,0.1)" : S.card,
+                        border: i === 5 ? "1.5px solid rgba(13,33,55,0.4)" : `1px solid ${S.border}`,
                         display: "flex", alignItems: "center", justifyContent: "center",
                         fontFamily: S.mono, fontSize: 10, color: i === 5 ? S.accent : S.dimmer,
                         fontWeight: i === 5 ? 700 : 400,
@@ -825,7 +825,7 @@ export default function Page() {
         </section>
 
         {/* ── CONTACT ── */}
-        <section style={{ padding: "120px 0" }} id="contact">
+        <section style={{ padding: "140px 0" }} id="contact">
           <div style={{ ...wrap(), maxWidth: 600, textAlign: "center" }}>
             <h2 style={{ fontSize: "clamp(28px,4vw,48px)", fontWeight: 300, letterSpacing: "-0.025em", lineHeight: 1.2, marginBottom: 24, color: S.fg }}>
               Building operational systems{" "}
