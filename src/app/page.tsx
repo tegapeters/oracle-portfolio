@@ -390,10 +390,10 @@ export default function Page() {
               ].map(({ label, pct }, i) => (
                 <div key={label} style={{
                   height: 34, borderRadius: 4, width: pct,
-                  background: `rgba(200,169,110,${0.05 + i * 0.03})`,
-                  border: `1px solid rgba(200,169,110,${0.15 + i * 0.06})`,
+                  background: `rgba(200,169,110,${0.07 + i * 0.04})`,
+                  border: `1px solid rgba(200,169,110,${0.2 + i * 0.07})`,
                   display: "flex", alignItems: "center", padding: "0 12px",
-                  fontSize: 11, fontFamily: S.mono, color: `rgba(234,232,227,${0.45 + i * 0.1})`,
+                  fontSize: 11, fontFamily: S.mono, color: S.dim,
                 }}>
                   {label}
                 </div>
