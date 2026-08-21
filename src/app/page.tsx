@@ -1,8 +1,10 @@
+"use client";
 /* ─────────────────────────────────────────────────────────────────────────────
    TEGA ESHARETURI — Oracle Work Portfolio
    All copy lives in the DATA section below. No confidential data exposed.
 ───────────────────────────────────────────────────────────────────────────── */
 
+import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
 
 const S = {
@@ -199,12 +201,34 @@ const AI_FLOW = [
 /* ─────────────────────────────────────────────────────────────────────────── */
 
 export default function Page() {
+  const [activeSection, setActiveSection] = useState("");
+
+  useEffect(() => {
+    // Scroll-reveal: fade sections in as they enter the viewport
+    const revealObserver = new IntersectionObserver(
+      (entries) => entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add("revealed"); }),
+      { threshold: 0.08, rootMargin: "0px 0px -48px 0px" }
+    );
+    document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
+
+    // Active nav: highlight the section currently in view
+    const navObserver = new IntersectionObserver(
+      (entries) => entries.forEach((e) => { if (e.isIntersecting) setActiveSection(e.target.id); }),
+      { threshold: 0.3 }
+    );
+    document.querySelectorAll("section[id]").forEach((s) => navObserver.observe(s));
+
+    return () => { revealObserver.disconnect(); navObserver.disconnect(); };
+  }, []);
+
+  const navActive = (id: string) => activeSection === id ? S.accent : S.dim;
+
   return (
     <>
       {/* ── NAV ── */}
       <header style={{
         position: "sticky", top: 0, zIndex: 100,
-        background: "rgba(255,255,255,0.95)", backdropFilter: "blur(12px)",
+        background: "rgba(15,25,35,0.95)", backdropFilter: "blur(12px)",
         borderBottom: `1px solid ${S.border}`,
       }}>
         <div style={{ ...wrap(), display: "flex", alignItems: "center", justifyContent: "space-between", height: 60 }}>
@@ -213,21 +237,19 @@ export default function Page() {
           </span>
           <nav style={{ display: "flex", gap: 28, alignItems: "center" }}>
             <div className="nav-links" style={{ display: "flex", gap: 28, alignItems: "center" }}>
-              {(["Work", "Architecture", "Cloud Platform", "AI Systems", "Skills", "Resume"] as const).map((label) => {
-                const href = label === "Resume" ? "#contact"
-                  : label === "Work" ? "#work"
-                  : label === "Architecture" ? "#architecture"
-                  : label === "Cloud Platform" ? "#cloud-platform"
-                  : label === "Skills" ? "#skills"
-                  : "#ai-systems";
-                return (
-                  <a key={label} href={href} style={{ fontFamily: S.mono, fontSize: 11, letterSpacing: "0.1em", color: S.dim, textDecoration: "none" }}>
-                    {label}
-                  </a>
-                );
-              })}
+              {([
+                ["Work", "#work", "work"], ["Architecture", "#architecture", "architecture"],
+                ["Cloud Platform", "#cloud-platform", "cloud-platform"],
+                ["AI Systems", "#ai-systems", "ai-systems"],
+                ["Skills", "#skills", "skills"], ["Resume", "#contact", "contact"],
+              ] as const).map(([label, href, id]) => (
+                <a key={label} href={href} className="nav-link"
+                  style={{ fontFamily: S.mono, fontSize: 11, letterSpacing: "0.1em", color: navActive(id), textDecoration: "none" }}>
+                  {label}
+                </a>
+              ))}
             </div>
-            <a href="#contact" style={{
+            <a href="#contact" className="connect-btn" style={{
               fontFamily: S.mono, fontSize: 11, letterSpacing: "0.1em", padding: "7px 18px",
               borderRadius: 4, background: S.accent, color: S.bg, textDecoration: "none", fontWeight: 600,
             }}>
@@ -240,7 +262,7 @@ export default function Page() {
       {/* ── MOBILE SUB-NAV ── */}
       <div className="mobile-subnav" style={{
         display: "none", overflowX: "auto", borderBottom: `1px solid ${S.border}`,
-        background: "rgba(255,255,255,0.98)",
+        background: "rgba(15,25,35,0.98)",
         WebkitOverflowScrolling: "touch" as React.CSSProperties["WebkitOverflowScrolling"],
       }}>
         <div style={{ display: "flex", gap: 0, padding: "0 16px", whiteSpace: "nowrap" }}>
@@ -264,27 +286,27 @@ export default function Page() {
         <section style={{ padding: "120px 0 100px", borderBottom: `1px solid ${S.border}` }}>
           <div style={{ ...wrap(), display: "grid", gridTemplateColumns: "1fr 300px", gap: 60, alignItems: "center" }} className="hero-grid">
             <div>
-              <div style={{ ...tagStyle({ color: S.accent }), marginBottom: 24 }}>
+              <div className="hero-tag" style={{ ...tagStyle({ color: S.accent }), marginBottom: 24 }}>
                 DATA ENGINEERING · UPTIME &amp; RELIABILITY AUTOMATION · OCI ANALYTICS · GOVERNED GENAI WORKFLOWS
               </div>
-              <h1 style={{ fontSize: "clamp(32px,4vw,52px)", fontWeight: 300, lineHeight: 1.2, letterSpacing: "-0.025em", marginBottom: 28, color: S.fg }}>
+              <h1 className="hero-h1" style={{ fontSize: "clamp(32px,4vw,52px)", fontWeight: 300, lineHeight: 1.2, letterSpacing: "-0.025em", marginBottom: 28, color: S.fg }}>
                 Operational systems that turn fragmented evidence into{" "}
                 <em style={{ fontStyle: "italic", color: S.accent }}>decision-ready insight.</em>
               </h1>
-              <p style={{ fontSize: 16, color: S.dim, lineHeight: 1.8, maxWidth: 540, marginBottom: 36 }}>
+              <p className="hero-body" style={{ fontSize: 16, color: S.dim, lineHeight: 1.8, maxWidth: 540, marginBottom: 36 }}>
                 Data engineer specializing in production analytics automation, cloud-delivered operational
                 intelligence, and governed GenAI workflows at Oracle. Builds Python/SQL pipelines,
                 reconciliation controls, and secure OCI analytics applications that turn Jira, service
                 telemetry, Event Assessment, Slack, and Confluence evidence into trusted uptime reporting
                 and source-backed incident artifacts.
               </p>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+              <div className="hero-chips" style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
                 {[
                   "3–5 day manual cycle → ~3 hour automated workflow",
                   "Python-first, Excel-compatible reporting",
                   "Source-grounded AI with human approval gates",
                 ].map((chip) => (
-                  <span key={chip} style={{ ...pillStyle(), border: "1px solid rgba(200,169,110,0.22)", color: S.accent, background: "rgba(200,169,110,0.08)", fontSize: 12 }}>
+                  <span key={chip} className="hover-pill" style={{ ...pillStyle(), border: "1px solid rgba(200,169,110,0.35)", color: S.accent, background: "rgba(200,169,110,0.08)", fontSize: 12 }}>
                     {chip}
                   </span>
                 ))}
@@ -292,7 +314,7 @@ export default function Page() {
             </div>
 
             {/* decorative abstract flow */}
-            <div aria-hidden="true" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <div className="hero-viz" aria-hidden="true" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {[
                 { label: "Operational sources", pct: "100%" },
                 { label: "Normalize + enrich",  pct: "84%"  },
@@ -305,7 +327,7 @@ export default function Page() {
                   background: `rgba(200,169,110,${0.05 + i * 0.03})`,
                   border: `1px solid rgba(200,169,110,${0.15 + i * 0.06})`,
                   display: "flex", alignItems: "center", padding: "0 12px",
-                  fontSize: 11, fontFamily: S.mono, color: `rgba(10,10,10,${0.45 + i * 0.1})`,
+                  fontSize: 11, fontFamily: S.mono, color: `rgba(234,232,227,${0.45 + i * 0.1})`,
                 }}>
                   {label}
                 </div>
@@ -336,8 +358,8 @@ export default function Page() {
           <div style={wrap()}>
             <div style={{ ...tagStyle(), marginBottom: 32 }}>// THE WORK IN ONE VIEW</div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 20 }} className="impact-grid">
-              {IMPACT.map((c) => (
-                <div key={c.n} style={cardStyle()}>
+              {IMPACT.map((c, i) => (
+                <div key={c.n} className={`hover-card reveal reveal-delay-${i + 1}`} style={cardStyle()}>
                   <div style={{ fontFamily: S.mono, fontSize: 11, color: S.accent, marginBottom: 14, letterSpacing: "0.1em" }}>{c.n}</div>
                   <h3 style={{ fontSize: 16, fontWeight: 500, color: S.fg, marginBottom: 10, lineHeight: 1.3 }}>{c.title}</h3>
                   <p style={{ fontSize: 14, color: S.dim, lineHeight: 1.75 }}>{c.body}</p>
@@ -350,7 +372,7 @@ export default function Page() {
         {/* ── CASE STUDY ── */}
         <section style={{ padding: "120px 0", borderBottom: `1px solid ${S.border}` }} id="architecture">
           <div style={wrap()}>
-            <div style={{ ...tagStyle(), marginBottom: 14 }}>// FEATURED CASE STUDY</div>
+            <div className="reveal" style={{ ...tagStyle(), marginBottom: 14 }}>// FEATURED CASE STUDY</div>
             <h2 style={{ fontSize: "clamp(26px,3.5vw,42px)", fontWeight: 300, letterSpacing: "-0.02em", lineHeight: 1.2, marginBottom: 24, color: S.fg }}>
               Uptime Reporting Automation
             </h2>
@@ -438,7 +460,7 @@ export default function Page() {
               <div style={{ ...tagStyle(), marginBottom: 20 }}>CONTROLS THAT MAKE THE REPORT TRUSTWORTHY</div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }} className="controls-grid">
                 {CONTROLS.map((c) => (
-                  <div key={c.n} style={cardStyle({ display: "flex", gap: 16 })}>
+                  <div key={c.n} className="hover-card reveal" style={cardStyle({ display: "flex", gap: 16 })}>
                     <div style={{
                       width: 28, height: 28, borderRadius: "50%", flexShrink: 0,
                       background: "rgba(200,169,110,0.08)", border: "1px solid rgba(200,169,110,0.2)",
@@ -614,7 +636,7 @@ export default function Page() {
             <div style={{ display: "grid", gridTemplateColumns: "1fr 28px 1fr 28px 1fr", gap: 0, alignItems: "start", marginBottom: 56 }} className="ai-grid">
               {AI_CARDS.map((c, i) => (
                 <>
-                  <div key={c.n} style={cardStyle()}>
+                  <div key={c.n} className="hover-card reveal" style={cardStyle()}>
                     <div style={{ fontFamily: S.mono, fontSize: 10, color: S.accent, letterSpacing: "0.1em", marginBottom: 12 }}>0{c.n}</div>
                     <h3 style={{ fontSize: 15, fontWeight: 500, color: S.fg, lineHeight: 1.35, marginBottom: 14 }}>{c.title}</h3>
                     <p style={{ fontSize: 14, color: S.dim, lineHeight: 1.7, marginBottom: 16 }}>{c.body}</p>
@@ -751,7 +773,7 @@ export default function Page() {
             <div style={{ ...tagStyle(), marginBottom: 20 }}>SKILL CATALOG</div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 16 }} className="controls-grid">
               {SKILL_CATALOG.map((s) => (
-                <div key={s.name} style={cardStyle({ display: "flex", flexDirection: "column", gap: 12 })}>
+                <div key={s.name} className="hover-card reveal" style={cardStyle({ display: "flex", flexDirection: "column", gap: 12 })}>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
                     <div style={{ fontSize: 15, fontWeight: 500, color: S.fg }}>{s.name}</div>
                     <div style={{
@@ -764,6 +786,108 @@ export default function Page() {
                   <p style={{ fontSize: 14, color: S.dim, lineHeight: 1.7 }}>{s.desc}</p>
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── ORG LAYER DIAGRAM ── */}
+        <section style={{ padding: "100px 0", borderBottom: `1px solid ${S.border}` }}>
+          <div style={wrap()}>
+            <div className="reveal" style={{ ...tagStyle(), marginBottom: 14 }}>// ORGANIZATIONAL POSITION</div>
+            <h2 className="reveal reveal-delay-1" style={{ fontSize: "clamp(22px,3vw,36px)", fontWeight: 300, letterSpacing: "-0.02em", marginBottom: 12, color: S.fg }}>
+              Where the skill layer sits
+            </h2>
+            <p className="reveal reveal-delay-2" style={{ fontSize: 14, color: S.dim, lineHeight: 1.7, marginBottom: 52, maxWidth: 580 }}>
+              The skill layer is the operational bridge — it reads from authoritative source systems, coordinates
+              calculations and incident workflows, and gates every output through explicit human review before publication.
+            </p>
+
+            {/* Layer stack */}
+            <div className="reveal reveal-delay-2" style={{ display: "flex", flexDirection: "column", gap: 6, maxWidth: 780 }}>
+
+              {/* Source systems row */}
+              <div>
+                <div style={{ fontFamily: S.mono, fontSize: 9, color: S.dimmer, letterSpacing: "0.1em", marginBottom: 8, paddingLeft: 4 }}>SOURCE AUTHORITY</div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                  {["Hub · Assessment AN-*", "NetSuite Jira", "ACAL / Ops Analytics", "Slack", "Outlook", "Confluence"].map((src) => (
+                    <div key={src} style={{
+                      fontFamily: S.mono, fontSize: 11, padding: "8px 14px", borderRadius: 4,
+                      border: `1px solid ${S.border}`, background: S.surface, color: S.dim, letterSpacing: "0.05em",
+                    }}>{src}</div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Arrow down */}
+              <div style={{ display: "flex", alignItems: "center", paddingLeft: 20, height: 28 }}>
+                <div style={{ width: 1, height: 28, background: `linear-gradient(to bottom, ${S.border}, ${S.accent})` }} />
+              </div>
+
+              {/* Skill layer — highlighted */}
+              <div style={{
+                borderRadius: 8, border: `1px solid ${S.accent}`,
+                background: `linear-gradient(135deg, rgba(200,169,110,0.08) 0%, rgba(200,169,110,0.03) 100%)`,
+                padding: "22px 28px",
+              }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16, flexWrap: "wrap", gap: 10 }}>
+                  <div>
+                    <div style={{ fontFamily: S.mono, fontSize: 9, color: S.accent, letterSpacing: "0.12em", marginBottom: 6 }}>SKILL LAYER — OPERATIONAL BRIDGE</div>
+                    <div style={{ fontSize: 16, fontWeight: 600, color: S.fg }}>Tega Eshareturi · CSI Automation & MOR Reporting</div>
+                  </div>
+                  <div style={{ fontFamily: S.mono, fontSize: 9, padding: "4px 12px", borderRadius: 10, border: `1px solid rgba(200,169,110,0.4)`, color: S.accent, letterSpacing: "0.1em" }}>
+                    Oracle DS/CIS
+                  </div>
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 14 }} className="principles-grid">
+                  {[
+                    { label: "MOR Reporting", items: ["Uptime reconciliation", "Cases & CIM ranking", "MOR presentation gen"] },
+                    { label: "CSI Lifecycle",  items: ["Unified Investigation Builder", "Event Reports & SH writes", "Postmortem & retrospective"] },
+                    { label: "Governance",     items: ["Source-authority enforcement", "Review gate control", "Evidence package generation"] },
+                  ].map((col) => (
+                    <div key={col.label}>
+                      <div style={{ fontFamily: S.mono, fontSize: 10, color: S.accent, letterSpacing: "0.08em", marginBottom: 8 }}>{col.label}</div>
+                      {col.items.map((item) => (
+                        <div key={item} style={{ fontSize: 12, color: S.dim, lineHeight: 1.7, paddingLeft: 10, borderLeft: `1px solid rgba(200,169,110,0.2)`, marginBottom: 4 }}>{item}</div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Arrow down */}
+              <div style={{ display: "flex", alignItems: "center", paddingLeft: 20, height: 28 }}>
+                <div style={{ width: 1, height: 28, background: `linear-gradient(to bottom, ${S.accent}, ${S.border})` }} />
+              </div>
+
+              {/* Review gate */}
+              <div style={{
+                borderRadius: 6, border: `1px dashed ${S.border}`,
+                background: S.surface, padding: "14px 20px",
+                display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap",
+              }}>
+                <div style={{ fontFamily: S.mono, fontSize: 9, color: S.dimmer, letterSpacing: "0.1em", whiteSpace: "nowrap" }}>REVIEW GATE</div>
+                <div style={{ fontSize: 12, color: S.dim, lineHeight: 1.6 }}>
+                  Human approval required before Confluence, Jira, Slack, and Outlook writes. Visual QA is part of publication acceptance.
+                </div>
+              </div>
+
+              {/* Arrow down */}
+              <div style={{ display: "flex", alignItems: "center", paddingLeft: 20, height: 28 }}>
+                <div style={{ width: 1, height: 28, background: S.border }} />
+              </div>
+
+              {/* Outputs row */}
+              <div>
+                <div style={{ fontFamily: S.mono, fontSize: 9, color: S.dimmer, letterSpacing: "0.1em", marginBottom: 8, paddingLeft: 4 }}>ORGANIZATIONAL OUTPUTS</div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                  {["Monthly MOR", "Uptime Map", "Smiley Report", "Event Reports", "Postmortems", "Executive Summaries"].map((out) => (
+                    <div key={out} style={{
+                      fontFamily: S.mono, fontSize: 11, padding: "8px 14px", borderRadius: 4,
+                      border: `1px solid ${S.border}`, background: S.card, color: S.dim, letterSpacing: "0.05em",
+                    }}>{out}</div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -791,7 +915,7 @@ export default function Page() {
           <div style={wrap()}>
             <div style={{ ...tagStyle(), marginBottom: 24 }}>// CORE CAPABILITIES</div>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
-              {CAPS.map((c) => <span key={c} style={pillStyle()}>{c}</span>)}
+              {CAPS.map((c) => <span key={c} className="hover-pill" style={pillStyle()}>{c}</span>)}
             </div>
           </div>
         </section>
@@ -802,7 +926,7 @@ export default function Page() {
             <div style={{ ...tagStyle(), marginBottom: 28 }}>// CERTIFICATIONS</div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 12 }} className="cert-grid">
               {CERTS.map((c) => (
-                <div key={c.name} style={{
+                <div key={c.name} className="hover-card reveal" style={{
                   display: "flex", alignItems: "flex-start", gap: 14,
                   padding: "16px 20px", borderRadius: 6,
                   border: `1px solid ${S.border}`, background: S.card,
