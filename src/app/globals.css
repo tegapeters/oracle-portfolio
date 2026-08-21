@@ -9,6 +9,21 @@
   --dim:     #8A9BB0;
   --dimmer:  #455570;
   --accent:  #C8A96E;
+  --nav-bg:  rgba(15,25,35,0.95);
+  --subnav-bg: rgba(15,25,35,0.98);
+}
+
+[data-theme="light"] {
+  --bg:      #F7F5F0;
+  --surface: #FFFFFF;
+  --card:    #FAFAF7;
+  --border:  #E2DDD5;
+  --fg:      #1A1A1A;
+  --dim:     #5C5C5C;
+  --dimmer:  #A0A0A0;
+  --accent:  #9A6F2E;
+  --nav-bg:  rgba(247,245,240,0.95);
+  --subnav-bg: rgba(247,245,240,0.98);
 }
 
 @theme inline {

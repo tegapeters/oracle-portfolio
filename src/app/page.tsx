@@ -202,6 +202,11 @@ const AI_FLOW = [
 
 export default function Page() {
   const [activeSection, setActiveSection] = useState("");
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
 
   useEffect(() => {
     // Scroll-reveal: fade sections in as they enter the viewport
@@ -228,7 +233,7 @@ export default function Page() {
       {/* ── NAV ── */}
       <header style={{
         position: "sticky", top: 0, zIndex: 100,
-        background: "rgba(15,25,35,0.95)", backdropFilter: "blur(12px)",
+        background: "var(--nav-bg)", backdropFilter: "blur(12px)",
         borderBottom: `1px solid ${S.border}`,
       }}>
         <div style={{ ...wrap(), display: "flex", alignItems: "center", justifyContent: "space-between", height: 60 }}>
@@ -249,6 +254,17 @@ export default function Page() {
                 </a>
               ))}
             </div>
+            <button
+              onClick={() => setTheme(t => t === "dark" ? "light" : "dark")}
+              title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              style={{
+                background: "none", border: `1px solid ${S.border}`, borderRadius: 4,
+                padding: "6px 10px", cursor: "pointer", color: S.dim, lineHeight: 1,
+                fontSize: 14, display: "flex", alignItems: "center",
+              }}
+            >
+              {theme === "dark" ? "☀" : "☾"}
+            </button>
             <a href="#contact" className="connect-btn" style={{
               fontFamily: S.mono, fontSize: 11, letterSpacing: "0.1em", padding: "7px 18px",
               borderRadius: 4, background: S.accent, color: S.bg, textDecoration: "none", fontWeight: 600,
@@ -262,7 +278,7 @@ export default function Page() {
       {/* ── MOBILE SUB-NAV ── */}
       <div className="mobile-subnav" style={{
         display: "none", overflowX: "auto", borderBottom: `1px solid ${S.border}`,
-        background: "rgba(15,25,35,0.98)",
+        background: "var(--subnav-bg)",
         WebkitOverflowScrolling: "touch" as React.CSSProperties["WebkitOverflowScrolling"],
       }}>
         <div style={{ display: "flex", gap: 0, padding: "0 16px", whiteSpace: "nowrap" }}>
