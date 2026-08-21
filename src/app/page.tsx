@@ -204,7 +204,7 @@ export default function Page() {
       {/* ── NAV ── */}
       <header style={{
         position: "sticky", top: 0, zIndex: 100,
-        background: "rgba(15,25,35,0.95)", backdropFilter: "blur(12px)",
+        background: "rgba(255,255,255,0.95)", backdropFilter: "blur(12px)",
         borderBottom: `1px solid ${S.border}`,
       }}>
         <div style={{ ...wrap(), display: "flex", alignItems: "center", justifyContent: "space-between", height: 60 }}>
@@ -240,7 +240,7 @@ export default function Page() {
       {/* ── MOBILE SUB-NAV ── */}
       <div className="mobile-subnav" style={{
         display: "none", overflowX: "auto", borderBottom: `1px solid ${S.border}`,
-        background: "rgba(15,25,35,0.98)",
+        background: "rgba(255,255,255,0.98)",
         WebkitOverflowScrolling: "touch" as React.CSSProperties["WebkitOverflowScrolling"],
       }}>
         <div style={{ display: "flex", gap: 0, padding: "0 16px", whiteSpace: "nowrap" }}>
@@ -284,7 +284,7 @@ export default function Page() {
                   "Python-first, Excel-compatible reporting",
                   "Source-grounded AI with human approval gates",
                 ].map((chip) => (
-                  <span key={chip} style={{ ...pillStyle(), border: "1px solid rgba(200,169,110,0.22)", color: "rgba(234,232,227,0.85)", background: "rgba(200,169,110,0.06)", fontSize: 12 }}>
+                  <span key={chip} style={{ ...pillStyle(), border: "1px solid rgba(200,169,110,0.22)", color: S.accent, background: "rgba(200,169,110,0.08)", fontSize: 12 }}>
                     {chip}
                   </span>
                 ))}
@@ -302,10 +302,10 @@ export default function Page() {
               ].map(({ label, pct }, i) => (
                 <div key={label} style={{
                   height: 34, borderRadius: 4, width: pct,
-                  background: `rgba(200,169,110,${0.04 + i * 0.03})`,
-                  border: `1px solid rgba(200,169,110,${0.1 + i * 0.05})`,
+                  background: `rgba(200,169,110,${0.05 + i * 0.03})`,
+                  border: `1px solid rgba(200,169,110,${0.15 + i * 0.06})`,
                   display: "flex", alignItems: "center", padding: "0 12px",
-                  fontSize: 11, fontFamily: S.mono, color: `rgba(234,232,227,${0.4 + i * 0.12})`,
+                  fontSize: 11, fontFamily: S.mono, color: `rgba(10,10,10,${0.45 + i * 0.1})`,
                 }}>
                   {label}
                 </div>
@@ -316,7 +316,7 @@ export default function Page() {
         </section>
 
         {/* ── MISSION CONTEXT ── */}
-        <section style={{ padding: "48px 0", borderBottom: `1px solid ${S.border}`, background: "rgba(200,169,110,0.04)" }}>
+        <section style={{ padding: "48px 0", borderBottom: `1px solid ${S.border}`, background: "rgba(200,169,110,0.05)" }}>
           <div style={wrap()}>
             <div style={{ maxWidth: 780, borderLeft: `3px solid ${S.accent}`, paddingLeft: 24 }}>
               <div style={{ ...tagStyle({ color: S.accent, marginBottom: 12 }) }}>// ORGANIZATIONAL CONTEXT</div>
