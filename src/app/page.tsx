@@ -126,13 +126,55 @@ const CLOUD_PAGES = [
 ];
 
 const INVESTIGATION_STEPS = [
-  { label: "Trigger",        detail: "Operational question or incident signal received — scope is defined before any source retrieval begins." },
-  { label: "Scope check",    detail: "Skill enforces what applies: event type, reporting window, affected accounts, and which sources are valid for this investigation." },
-  { label: "Source pull",    detail: "Connector retrieves read-only records from Jira, Slack, Confluence, and service telemetry — only approved sources, no hallucination fill-in." },
-  { label: "Evidence bundle", detail: "Retrieved records are assembled and structured. If a required source is missing or incomplete, the skill flags it rather than proceeding." },
-  { label: "AI draft",       detail: "Investigation document is generated from the evidence bundle only — scope, timeline, signals, open questions, and recommended actions." },
-  { label: "Review gate",    detail: "Human reviews the draft, approves, adds judgment, or requests revision. No output leaves this stage without an accountable sign-off." },
-  { label: "Artifact",       detail: "Approved investigation document is published to Confluence or handed to the operator for downstream action." },
+  {
+    label: "Trigger",
+    detail: "An operational question, incident alert, or leadership request arrives. Scope is explicitly defined before any source retrieval begins — no open-ended querying.",
+    inputs: ["Incident alert", "Analyst question", "Leadership request"],
+    outputs: ["Defined scope", "Investigation initiated"],
+    rule: "Scope before retrieval — always",
+  },
+  {
+    label: "Scope check",
+    detail: "The skill enforces what applies: event type, reporting window, affected accounts, and which connectors are valid for this specific investigation. Out-of-scope sources are blocked.",
+    inputs: ["Event type", "Reporting window", "Affected accounts"],
+    outputs: ["Approved source list", "Out-of-scope sources blocked"],
+    rule: "Out-of-scope connectors are blocked — not queried",
+  },
+  {
+    label: "Source pull",
+    detail: "Approved connectors retrieve read-only records from Jira, Slack, Confluence, and service telemetry. No unapproved sources. No hallucination fill-in. Retrieval is auditable.",
+    inputs: ["Jira tickets", "Slack threads", "Confluence pages", "Service telemetry"],
+    outputs: ["Raw evidence records", "Retrieval manifest"],
+    rule: "Read-only · Pre-approved sources only · No writes",
+  },
+  {
+    label: "Evidence bundle",
+    detail: "Retrieved records are structured into a validated evidence package. If a required source is missing or incomplete, the skill flags it rather than proceeding silently.",
+    inputs: ["Raw evidence records", "Retrieval manifest"],
+    outputs: ["Structured evidence package", "Missing-source flags"],
+    rule: "Missing source → flag, not a guess",
+  },
+  {
+    label: "AI draft",
+    detail: "The investigation document is generated strictly from the evidence bundle — scope, timeline, signals, open questions, and recommended actions. Inference is bounded to retrieved evidence.",
+    inputs: ["Structured evidence package"],
+    outputs: ["Investigation doc draft", "Open question list"],
+    rule: "Infers only from evidence — hallucination fill-in is blocked",
+  },
+  {
+    label: "Review gate",
+    detail: "A human reviews the draft, approves it, adds judgment, or requests revision. Nothing leaves this stage without an accountable sign-off. This step is not optional or skippable.",
+    inputs: ["Draft document", "Operator judgment"],
+    outputs: ["Approved document", "Revision request (if needed)"],
+    rule: "No output leaves without accountable sign-off",
+  },
+  {
+    label: "Artifact",
+    detail: "The approved investigation document is published to Confluence or handed off for downstream action. An immutable evidence record is created at every publication.",
+    inputs: ["Approved document", "Operator action"],
+    outputs: ["Confluence page", "Evidence record", "Downstream handoff"],
+    rule: "Immutable record created on every publish",
+  },
 ];
 
 const SKILL_CATALOG = [
@@ -203,10 +245,18 @@ const AI_FLOW = [
 export default function Page() {
   const [activeSection, setActiveSection] = useState("");
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [activeStep, setActiveStep] = useState(0);
+  const [stepPaused, setStepPaused] = useState(false);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
+
+  useEffect(() => {
+    if (stepPaused) return;
+    const id = setInterval(() => setActiveStep(s => (s + 1) % INVESTIGATION_STEPS.length), 2800);
+    return () => clearInterval(id);
+  }, [stepPaused]);
 
   useEffect(() => {
     // Scroll-reveal: fade sections in as they enter the viewport
@@ -733,49 +783,180 @@ export default function Page() {
                 </div>
               </div>
 
-              {/* step-by-step anatomy */}
-              <div style={{ padding: "28px" }}>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(7,1fr)", gap: 0, position: "relative" }} className="skill-steps">
-                  {/* connector line */}
+              {/* ── Interactive step anatomy ── */}
+              <div style={{ padding: "28px 28px 0" }}>
+                {/* hint */}
+                <div style={{ fontFamily: S.mono, fontSize: 9, color: S.dimmer, letterSpacing: "0.1em", marginBottom: 18, display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: S.accent, animation: "stepDot 1.4s ease infinite" }} />
+                  CLICK ANY STEP TO EXPLORE · AUTO-ADVANCING
+                </div>
+
+                {/* node row */}
+                <div style={{ position: "relative" }} className="skill-steps-wrap">
+                  {/* track (dim) */}
                   <div aria-hidden="true" style={{
                     position: "absolute", top: 19, left: "calc(100% / 14)", right: "calc(100% / 14)",
-                    height: 1, background: `linear-gradient(to right, ${S.accent}, rgba(200,169,110,0.14))`,
+                    height: 1, background: S.border, pointerEvents: "none",
+                  }} />
+                  {/* fill (gold, animates with activeStep) */}
+                  <div aria-hidden="true" style={{
+                    position: "absolute", top: 19,
+                    left: "calc(100% / 14)",
+                    width: `${(activeStep / (INVESTIGATION_STEPS.length - 1)) * (100 - 200 / 14)}%`,
+                    height: 1, background: S.accent,
+                    transition: "width 0.45s cubic-bezier(0.4,0,0.2,1)",
                     pointerEvents: "none",
                   }} />
 
-                  {INVESTIGATION_STEPS.map((step, i) => (
-                    <div key={step.label} style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "0 8px", textAlign: "center" }}>
-                      {/* node */}
-                      <div style={{
-                        width: 38, height: 38, borderRadius: "50%", flexShrink: 0, zIndex: 1, marginBottom: 14,
-                        background: i === 5 ? "rgba(200,169,110,0.1)" : S.card,
-                        border: i === 5 ? "1.5px solid rgba(200,169,110,0.45)" : `1px solid ${S.border}`,
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                        fontFamily: S.mono, fontSize: 10, color: i === 5 ? S.accent : S.dimmer,
-                        fontWeight: i === 5 ? 700 : 400,
-                      }}>
-                        {String(i + 1).padStart(2, "0")}
+                  <div style={{ display: "grid", gridTemplateColumns: `repeat(${INVESTIGATION_STEPS.length},1fr)`, gap: 0 }} className="skill-steps">
+                    {INVESTIGATION_STEPS.map((step, i) => {
+                      const isActive = i === activeStep;
+                      const isDone   = i < activeStep;
+                      return (
+                        <button
+                          key={step.label}
+                          onClick={() => { setActiveStep(i); setStepPaused(true); }}
+                          className={isActive ? "step-node step-active" : "step-node"}
+                          style={{
+                            background: "none", border: "none", padding: "0 6px",
+                            display: "flex", flexDirection: "column", alignItems: "center",
+                            cursor: "pointer", textAlign: "center",
+                          }}
+                        >
+                          {/* circle */}
+                          <div style={{
+                            width: 38, height: 38, borderRadius: "50%", flexShrink: 0, zIndex: 1, marginBottom: 12,
+                            background: isActive ? "rgba(200,169,110,0.14)" : isDone ? "rgba(200,169,110,0.06)" : S.card,
+                            border: isActive ? "1.5px solid rgba(200,169,110,0.7)" : isDone ? `1px solid rgba(200,169,110,0.35)` : `1px solid ${S.border}`,
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                            fontFamily: S.mono, fontSize: 10,
+                            color: isActive ? S.accent : isDone ? "rgba(200,169,110,0.6)" : S.dimmer,
+                            fontWeight: isActive ? 700 : 400,
+                            transition: "background 0.3s ease, border-color 0.3s ease, color 0.3s ease",
+                          }}>
+                            {String(i + 1).padStart(2, "0")}
+                          </div>
+                          {/* label */}
+                          <div style={{
+                            fontFamily: S.mono, fontSize: 9, letterSpacing: "0.08em", lineHeight: 1.3,
+                            color: isActive ? S.accent : isDone ? "rgba(200,169,110,0.55)" : S.dimmer,
+                            transition: "color 0.3s ease",
+                          }}>
+                            {step.label}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* detail panel */}
+                <div style={{
+                  marginTop: 24, borderRadius: 8,
+                  border: `1px solid rgba(200,169,110,0.22)`,
+                  background: S.surface,
+                  overflow: "hidden",
+                }}>
+                  {/* panel header */}
+                  <div style={{
+                    borderBottom: `1px solid ${S.border}`,
+                    padding: "14px 22px",
+                    display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap",
+                  }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                      <div style={{ fontFamily: S.mono, fontSize: 9, color: S.accent, letterSpacing: "0.1em" }}>
+                        STEP {String(activeStep + 1).padStart(2, "0")} / {String(INVESTIGATION_STEPS.length).padStart(2, "0")}
                       </div>
-                      {/* label */}
-                      <div style={{ fontFamily: S.mono, fontSize: 10, color: i === 5 ? S.accent : S.dim, letterSpacing: "0.08em", marginBottom: 8, lineHeight: 1.3 }}>
-                        {step.label}
-                      </div>
-                      {/* detail */}
-                      <div style={{ fontSize: 11, color: S.dimmer, lineHeight: 1.6 }}>
-                        {step.detail}
+                      <div style={{ fontSize: 14, fontWeight: 500, color: S.fg }}>
+                        {INVESTIGATION_STEPS[activeStep].label}
                       </div>
                     </div>
-                  ))}
+                    <div style={{ fontFamily: S.mono, fontSize: 10, color: S.accent, letterSpacing: "0.06em",
+                      padding: "4px 12px", borderRadius: 10,
+                      border: "1px solid rgba(200,169,110,0.25)", background: "rgba(200,169,110,0.06)",
+                    }}>
+                      {INVESTIGATION_STEPS[activeStep].rule}
+                    </div>
+                  </div>
+
+                  {/* panel body */}
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1.6fr 1fr", gap: 0 }} className="step-detail-grid">
+                    {/* inputs */}
+                    <div style={{ padding: "20px 22px", borderRight: `1px solid ${S.border}` }}>
+                      <div style={{ fontFamily: S.mono, fontSize: 9, color: S.dimmer, letterSpacing: "0.1em", marginBottom: 14 }}>INPUTS</div>
+                      {INVESTIGATION_STEPS[activeStep].inputs.map(inp => (
+                        <div key={inp} style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: 10 }}>
+                          <span style={{ color: S.accent, fontSize: 11, lineHeight: "22px", flexShrink: 0 }}>→</span>
+                          <span style={{ fontSize: 12, color: S.dim, lineHeight: 1.6 }}>{inp}</span>
+                        </div>
+                      ))}
+                    </div>
+                    {/* what happens */}
+                    <div style={{ padding: "20px 22px", borderRight: `1px solid ${S.border}` }}>
+                      <div style={{ fontFamily: S.mono, fontSize: 9, color: S.dimmer, letterSpacing: "0.1em", marginBottom: 14 }}>WHAT HAPPENS</div>
+                      <p style={{ fontSize: 13, color: S.dim, lineHeight: 1.8 }}>
+                        {INVESTIGATION_STEPS[activeStep].detail}
+                      </p>
+                    </div>
+                    {/* outputs */}
+                    <div style={{ padding: "20px 22px" }}>
+                      <div style={{ fontFamily: S.mono, fontSize: 9, color: S.dimmer, letterSpacing: "0.1em", marginBottom: 14 }}>OUTPUTS</div>
+                      {INVESTIGATION_STEPS[activeStep].outputs.map(out => (
+                        <div key={out} style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: 10 }}>
+                          <span style={{ color: "rgba(200,169,110,0.5)", fontSize: 11, lineHeight: "22px", flexShrink: 0 }}>←</span>
+                          <span style={{ fontSize: 12, color: S.dim, lineHeight: 1.6 }}>{out}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* step nav */}
+                  <div style={{
+                    borderTop: `1px solid ${S.border}`, padding: "12px 22px",
+                    display: "flex", alignItems: "center", justifyContent: "space-between",
+                  }}>
+                    <button
+                      onClick={() => { setActiveStep(s => Math.max(0, s - 1)); setStepPaused(true); }}
+                      disabled={activeStep === 0}
+                      style={{
+                        fontFamily: S.mono, fontSize: 10, letterSpacing: "0.08em",
+                        background: "none", border: `1px solid ${S.border}`, borderRadius: 4,
+                        padding: "5px 14px", color: activeStep === 0 ? S.dimmer : S.dim,
+                        cursor: activeStep === 0 ? "default" : "pointer",
+                      }}
+                    >← Prev</button>
+                    <button
+                      onClick={() => setStepPaused(p => !p)}
+                      style={{
+                        fontFamily: S.mono, fontSize: 9, letterSpacing: "0.1em",
+                        background: "none", border: `1px solid ${S.border}`, borderRadius: 4,
+                        padding: "5px 14px", color: S.dimmer, cursor: "pointer",
+                      }}
+                    >{stepPaused ? "▶ AUTO" : "⏸ PAUSE"}</button>
+                    <button
+                      onClick={() => { setActiveStep(s => Math.min(INVESTIGATION_STEPS.length - 1, s + 1)); setStepPaused(true); }}
+                      disabled={activeStep === INVESTIGATION_STEPS.length - 1}
+                      style={{
+                        fontFamily: S.mono, fontSize: 10, letterSpacing: "0.08em",
+                        background: "none", border: `1px solid ${S.border}`, borderRadius: 4,
+                        padding: "5px 14px", color: activeStep === INVESTIGATION_STEPS.length - 1 ? S.dimmer : S.dim,
+                        cursor: activeStep === INVESTIGATION_STEPS.length - 1 ? "default" : "pointer",
+                      }}
+                    >Next →</button>
+                  </div>
                 </div>
               </div>
 
-              {/* what makes it a skill, not a prompt */}
+              {/* spacer before props */}
+              <div style={{ height: 28 }} />
+
+              {/* skill contract summary */}
               <div style={{ borderTop: `1px solid ${S.border}`, padding: "20px 28px", display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 20 }} className="skill-props">
                 {[
-                  { label: "Source boundary", val: "Jira · Slack · Confluence · Service telemetry — read-only retrieval, pre-approved sources only" },
-                  { label: "Write capability", val: "Can draft and submit Jira tickets (bugs, improvements, docs) — fields pre-populated from evidence, operator approves before any write" },
+                  { label: "Source boundary", val: "Jira · Slack · Confluence · Service telemetry — read-only, pre-approved connectors only" },
+                  { label: "Write capability", val: "Drafts Jira tickets — fields pre-populated from evidence, operator confirms every field before submission" },
                   { label: "Inference rule",   val: "Evidence only — missing source triggers a flag, not a guess" },
-                  { label: "Review gate",      val: "No artifact or ticket leaves the skill without human approval and explicit sign-off" },
+                  { label: "Review gate",      val: "No artifact or ticket leaves the skill without human approval and sign-off" },
                 ].map((row) => (
                   <div key={row.label}>
                     <div style={{ fontFamily: S.mono, fontSize: 10, color: S.accent, letterSpacing: "0.1em", marginBottom: 6 }}>{row.label}</div>
