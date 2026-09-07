@@ -177,6 +177,49 @@ const INVESTIGATION_STEPS = [
   },
 ];
 
+const SIDE_PROJECTS = [
+  {
+    tag: "AI AUTOMATION · SAAS",
+    title: "Job Pal",
+    desc: "Agentic job search pipeline. Scrapes 8 job boards in parallel, scores every listing 1–10 against an uploaded resume with Claude, generates tailored cover letters for strong matches, and surfaces them in a branded Streamlit dashboard.",
+    built: [
+      "8-source parallel scraper with cross-source dedup",
+      "Claude Sonnet scoring: fit score, seniority, salary match, one-line reason",
+      "Cover letter generation for 8+ matches, sent to Supabase per user",
+      "Faculty / adjunct vertical — academic job feeds + faculty-specific scoring rubric",
+      "Gmail IMAP rejection scanner — auto-surfaces rejections in the Applied view",
+      "Networking event scraper (Meetup, Luma, AllEvents) — 95+ events per city",
+      "Daily cron via GitHub Actions — runs Mon–Fri 8am ET, no local machine needed",
+      "Multi-user auth with session-scoped resume and pipeline isolation",
+    ],
+    next: "Daily email digest · Stripe subscriptions · Greenhouse / Lever company watchlist",
+    stack: "Python · Claude Sonnet · Supabase · Streamlit · GitHub Actions",
+    link: "https://jobpal.streamlit.app",
+    linkLabel: "Live app ↗",
+    link2: "https://github.com/tegapeters/job-bot",
+    link2Label: "Repo ↗",
+  },
+  {
+    tag: "AI ASSISTANT · LAW FIRM",
+    title: "Eshie — Esh Law Group",
+    desc: "AI assistant deployed for a personal injury law firm. Surfaces case status, client messages, and morning rundowns from CASEpeer without staff opening the case management system. Webhook-driven — Zapier pipes case events into the system in real time.",
+    built: [
+      "React / Vite frontend on Vercel + FastAPI backend on Render",
+      "CASEpeer webhook integration via Zapier — new cases, status changes, new leads",
+      "Case status brief skill: instant structured brief from CASEpeer data",
+      "Morning brief skill: daily case deadlines, client messages, unreviewed documents",
+      "Email + Microsoft SSO auth (staff use Google — SSO kept, Outlook features excluded)",
+      "3 Zapier Zaps live; Kenect SMS channel pending",
+    ],
+    next: "Kenect SMS webhook · Google Calendar integration · Client intake flow",
+    stack: "React · Vite · FastAPI · PostgreSQL · Claude Sonnet · Render · Vercel · Zapier",
+    link: "https://frontend-olive-ten-53.vercel.app",
+    linkLabel: "Live app ↗",
+    link2: "https://github.com/tegapeters/esh-law-ai",
+    link2Label: "Repo ↗",
+  },
+];
+
 const SKILL_CATALOG = [
   {
     name: "Postmortem Builder",
@@ -296,7 +339,7 @@ export default function Page() {
                 ["Work", "#work", "work"], ["Architecture", "#architecture", "architecture"],
                 ["Cloud Platform", "#cloud-platform", "cloud-platform"],
                 ["AI Systems", "#ai-systems", "ai-systems"],
-                ["Skills", "#skills", "skills"], ["Resume", "#contact", "contact"],
+                ["Skills", "#skills", "skills"], ["Projects", "#projects", "projects"], ["Resume", "#contact", "contact"],
               ] as const).map(([label, href, id]) => (
                 <a key={label} href={href} className="nav-link"
                   style={{ fontFamily: S.mono, fontSize: 11, letterSpacing: "0.1em", color: navActive(id), textDecoration: "none" }}>
@@ -334,7 +377,7 @@ export default function Page() {
         <div style={{ display: "flex", gap: 0, padding: "0 16px", whiteSpace: "nowrap" }}>
           {([
             ["Work", "#work"], ["Architecture", "#architecture"], ["Cloud Platform", "#cloud-platform"],
-            ["AI Systems", "#ai-systems"], ["Skills", "#skills"], ["Resume", "#contact"],
+            ["AI Systems", "#ai-systems"], ["Skills", "#skills"], ["Projects", "#projects"], ["Resume", "#contact"],
           ] as const).map(([label, href]) => (
             <a key={label} href={href} style={{
               fontFamily: S.mono, fontSize: 11, letterSpacing: "0.08em", color: S.dim,
@@ -1137,6 +1180,49 @@ export default function Page() {
                     <div style={{ fontSize: 13, fontWeight: 500, color: S.fg, lineHeight: 1.4, marginBottom: 4 }}>{c.name}</div>
                     <div style={{ fontFamily: S.mono, fontSize: 10, color: S.dimmer, letterSpacing: "0.08em" }}>
                       {c.issuer} · {c.year}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── INDEPENDENT PROJECTS ── */}
+        <section style={{ padding: "100px 0", borderBottom: `1px solid ${S.border}` }} id="projects">
+          <div style={wrap()}>
+            <div style={{ ...tagStyle(), marginBottom: 14 }}>// INDEPENDENT PROJECTS</div>
+            <h2 style={{ fontSize: "clamp(22px,3vw,36px)", fontWeight: 300, letterSpacing: "-0.02em", marginBottom: 12, color: S.fg }}>
+              Built outside Oracle
+            </h2>
+            <p style={{ fontSize: 15, color: S.dim, lineHeight: 1.8, maxWidth: 640, marginBottom: 56 }}>
+              Side projects that apply the same engineering principles — agentic pipelines, governed AI, multi-user data isolation — to problems outside the enterprise.
+            </p>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 24 }} className="impact-grid">
+              {SIDE_PROJECTS.map((p) => (
+                <div key={p.title} className="hover-card reveal" style={cardStyle({ display: "flex", flexDirection: "column" })}>
+                  <div style={{ fontFamily: S.mono, fontSize: 10, color: S.accent, letterSpacing: "0.16em", textTransform: "uppercase", marginBottom: 14 }}>{p.tag}</div>
+                  <h3 style={{ fontSize: 20, fontWeight: 500, color: S.fg, marginBottom: 12, lineHeight: 1.2 }}>{p.title}</h3>
+                  <p style={{ fontSize: 14, color: S.dim, lineHeight: 1.75, marginBottom: 20 }}>{p.desc}</p>
+                  <div style={{ marginBottom: 20 }}>
+                    <div style={{ fontFamily: S.mono, fontSize: 10, color: S.accent, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 10 }}>What&apos;s live</div>
+                    <ul style={{ margin: 0, padding: "0 0 0 16px", listStyle: "none" }}>
+                      {p.built.map((b) => (
+                        <li key={b} style={{ fontSize: 13, color: S.dim, lineHeight: 1.7, display: "flex", gap: 8, marginBottom: 4 }}>
+                          <span style={{ color: S.accent, flexShrink: 0 }}>→</span>{b}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div style={{ marginBottom: 24 }}>
+                    <div style={{ fontFamily: S.mono, fontSize: 10, color: S.dimmer, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8 }}>Build plan — next</div>
+                    <p style={{ fontSize: 13, color: S.dimmer, lineHeight: 1.7, margin: 0, fontFamily: S.mono }}>{p.next}</p>
+                  </div>
+                  <div style={{ marginTop: "auto" }}>
+                    <div style={{ fontFamily: S.mono, fontSize: 11, color: S.dimmer, letterSpacing: "0.08em", marginBottom: 14 }}>{p.stack}</div>
+                    <div style={{ display: "flex", gap: 14 }}>
+                      <a href={p.link} target="_blank" rel="noopener noreferrer" style={{ fontFamily: S.mono, fontSize: 12, color: S.accent, textDecoration: "none", letterSpacing: "0.06em" }}>{p.linkLabel}</a>
+                      <a href={p.link2} target="_blank" rel="noopener noreferrer" style={{ fontFamily: S.mono, fontSize: 12, color: S.dim, textDecoration: "none", letterSpacing: "0.06em" }}>{p.link2Label}</a>
                     </div>
                   </div>
                 </div>
