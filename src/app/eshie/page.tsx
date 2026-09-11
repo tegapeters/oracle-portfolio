@@ -418,10 +418,6 @@ export default function EshiePage() {
               build for your firm.
             </p>
             <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-              <a href="https://frontend-olive-ten-53.vercel.app" target="_blank" rel="noopener noreferrer"
-                style={{ fontFamily: S.mono, fontSize: 12, letterSpacing: "0.08em", padding: "11px 22px", borderRadius: 4, border: `1px solid ${S.border}`, color: S.fg, textDecoration: "none" }}>
-                See Eshie live ↗
-              </a>
               <a href="https://github.com/tegapeters/esh-law-ai" target="_blank" rel="noopener noreferrer"
                 style={{ fontFamily: S.mono, fontSize: 12, letterSpacing: "0.08em", padding: "11px 22px", borderRadius: 4, border: `1px solid ${S.border}`, color: S.fg, textDecoration: "none" }}>
                 Repo (private) ↗
