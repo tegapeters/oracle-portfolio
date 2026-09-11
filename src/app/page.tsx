@@ -208,13 +208,11 @@ const SIDE_PROJECTS = [
       "CASEpeer webhook integration via Zapier — new cases, status changes, new leads",
       "Case status brief skill: instant structured brief from CASEpeer data",
       "Morning brief skill: daily case deadlines, client messages, unreviewed documents",
-      "Email + Microsoft SSO auth (staff use Google — SSO kept, Outlook features excluded)",
+      "Google SSO auth — staff sign in with existing Google accounts",
       "3 Zapier Zaps live; Kenect SMS channel pending",
     ],
     next: "Kenect SMS webhook · Google Calendar integration · Client intake flow",
     stack: "React · Vite · FastAPI · PostgreSQL · Claude Sonnet · Render · Vercel · Zapier",
-    link: "https://frontend-olive-ten-53.vercel.app",
-    linkLabel: "Live app ↗",
     link2: "https://github.com/tegapeters/esh-law-ai",
     link2Label: "Repo ↗",
   },
@@ -1221,7 +1219,7 @@ export default function Page() {
                   <div style={{ marginTop: "auto" }}>
                     <div style={{ fontFamily: S.mono, fontSize: 11, color: S.dimmer, letterSpacing: "0.08em", marginBottom: 14 }}>{p.stack}</div>
                     <div style={{ display: "flex", gap: 14 }}>
-                      <a href={p.link} target="_blank" rel="noopener noreferrer" style={{ fontFamily: S.mono, fontSize: 12, color: S.accent, textDecoration: "none", letterSpacing: "0.06em" }}>{p.linkLabel}</a>
+                      {p.link && <a href={p.link} target="_blank" rel="noopener noreferrer" style={{ fontFamily: S.mono, fontSize: 12, color: S.accent, textDecoration: "none", letterSpacing: "0.06em" }}>{p.linkLabel}</a>}
                       <a href={p.link2} target="_blank" rel="noopener noreferrer" style={{ fontFamily: S.mono, fontSize: 12, color: S.dim, textDecoration: "none", letterSpacing: "0.06em" }}>{p.link2Label}</a>
                     </div>
                   </div>

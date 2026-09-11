@@ -58,7 +58,7 @@ const FEATURES = [
 const INTEGRATIONS = [
   { name: "CASEpeer", desc: "Real-time case sync", detail: "New cases, status changes, leads, and messages pushed automatically via Zapier" },
   { name: "Dropbox", desc: "Document intake", detail: "New files in client folders detected and linked to the right case by folder name" },
-  { name: "Microsoft", desc: "Team sign-in", detail: "Staff sign in with their existing Microsoft accounts — no separate passwords" },
+  { name: "Google", desc: "Team sign-in", detail: "Staff sign in with their existing Google accounts — no separate passwords" },
   { name: "Zapier", desc: "Workflow automation", detail: "4 live Zaps connect CASEpeer and Dropbox events to Eshie in real time" },
 ];
 
@@ -134,7 +134,6 @@ export default function EshiePage() {
             <div className="eshie-nav-links" style={{ display: "flex", gap: 24, alignItems: "center" }}>
               {([
                 ["Features", "#features", "features"],
-                ["How it works", "#how-it-works", "how-it-works"],
                 ["Integrations", "#integrations", "integrations"],
                 ["Trust", "#trust", "trust"],
               ] as const).map(([label, href, id]) => (
@@ -204,22 +203,12 @@ export default function EshiePage() {
                   "Live since 2026",
                   "210 cases imported day one",
                   "4 Zapier Zaps running",
-                  "Microsoft SSO for the team",
+                  "Google SSO for the team",
                 ].map((chip) => (
                   <span key={chip} className="hover-pill" style={{ ...pill(), border: "1px solid rgba(200,169,110,0.35)", color: S.accent, background: "rgba(200,169,110,0.08)", fontSize: 12 }}>
                     {chip}
                   </span>
                 ))}
-              </div>
-              <div className="hero-chips" style={{ display: "flex", gap: 12 }}>
-                <a href="https://frontend-olive-ten-53.vercel.app" target="_blank" rel="noopener noreferrer"
-                  style={{ fontFamily: S.mono, fontSize: 12, letterSpacing: "0.08em", padding: "11px 22px", borderRadius: 4, background: S.accent, color: "#1A1A1A", textDecoration: "none", fontWeight: 600 }}>
-                  Open Eshie ↗
-                </a>
-                <a href="#how-it-works"
-                  style={{ fontFamily: S.mono, fontSize: 12, letterSpacing: "0.08em", padding: "11px 22px", borderRadius: 4, border: `1px solid ${S.border}`, color: S.fg, textDecoration: "none" }}>
-                  See how it works
-                </a>
               </div>
             </div>
 
@@ -303,92 +292,6 @@ export default function EshiePage() {
         </section>
 
         {/* ── HOW IT WORKS ── */}
-        <section style={{ padding: "100px 0", borderBottom: `1px solid ${S.border}` }} id="how-it-works">
-          <div style={wrap()}>
-            <div style={{ ...tag(), marginBottom: 14 }}>// HOW IT WORKS</div>
-            <h2 style={{ fontSize: "clamp(22px,3vw,38px)", fontWeight: 300, letterSpacing: "-0.02em", marginBottom: 24, color: S.fg }}>
-              From question to case brief in seconds.
-            </h2>
-            <p style={{ fontSize: 16, color: S.dim, lineHeight: 1.8, maxWidth: 620, marginBottom: 56 }}>
-              Eshie is not a chatbot that guesses. It uses Claude as the reasoning layer, but every answer
-              comes from your actual case data — CASEpeer records, Dropbox documents, task history. If the
-              information is not in the system, Eshie says so.
-            </p>
-
-            {/* Flow */}
-            <div style={{ marginBottom: 56 }}>
-              <div
-                role="img"
-                aria-label="Four-step flow: staff asks a question → Eshie queries CASEpeer, Dropbox, and task history → Claude assembles the answer from live data → staff gets an accurate brief"
-                style={{ background: S.surface, border: `1px solid ${S.border}`, borderRadius: 8, padding: "32px 28px", overflowX: "auto" }}
-              >
-                <div style={{ display: "flex", alignItems: "center", gap: 0, minWidth: 700 }}>
-                  {HOW_IT_WORKS.map((step, i) => (
-                    <div key={i} style={{ display: "flex", alignItems: "center", flex: i === 1 ? 1.4 : 1 }}>
-                      <div style={{
-                        flex: 1, padding: "18px 16px", borderRadius: 8,
-                        border: "1px solid rgba(200,169,110,0.22)", background: "rgba(200,169,110,0.05)",
-                        textAlign: "center",
-                      }}>
-                        <div style={{ fontFamily: S.mono, fontSize: 9, color: S.accent, letterSpacing: "0.12em", marginBottom: 10, textTransform: "uppercase" }}>
-                          {String(i + 1).padStart(2, "0")}
-                        </div>
-                        <div style={{ fontSize: 13, fontWeight: 500, color: S.fg, lineHeight: 1.4, marginBottom: 6 }}>{step.label}</div>
-                        <div style={{ fontFamily: S.mono, fontSize: 10, color: S.dimmer, lineHeight: 1.5 }}>{step.sub}</div>
-                      </div>
-                      {i < HOW_IT_WORKS.length - 1 && (
-                        <div style={{ color: S.accent, fontSize: 18, padding: "0 10px", flexShrink: 0 }}>→</div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <p style={{ fontFamily: S.mono, fontSize: 12, color: S.dimmer, marginTop: 14, lineHeight: 1.6 }}>
-                Claude is the reasoning engine. Your Postgres database is the source of truth. Nothing is fabricated.
-              </p>
-            </div>
-
-            {/* Morning brief detail */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }} className="eshie-2col">
-              <div style={card({ borderLeft: `3px solid ${S.accent}`, borderRadius: "0 8px 8px 0" })}>
-                <div style={{ ...tag({ color: S.accent, marginBottom: 14 }) }}>MORNING BRIEF</div>
-                <p style={{ fontSize: 14, color: S.dim, lineHeight: 1.8, marginBottom: 16 }}>
-                  Every morning the brief pulls: tasks due today for your assigned cases, overnight client
-                  messages that haven&apos;t been responded to, and documents that arrived in Dropbox overnight
-                  waiting for review.
-                </p>
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  {["Deadlines today — filtered to you", "Overnight messages needing response", "Unreviewed documents in Dropbox"].map((item) => (
-                    <div key={item} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-                      <span style={{ color: S.accent, flexShrink: 0, lineHeight: "22px" }}>→</span>
-                      <span style={{ fontSize: 13, color: S.dim, lineHeight: 1.6 }}>{item}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div style={card()}>
-                <div style={{ ...tag({ marginBottom: 14 }) }}>WRITE TOOLS</div>
-                <p style={{ fontSize: 14, color: S.dim, lineHeight: 1.8, marginBottom: 16 }}>
-                  Staff can log notes and create tasks directly through the chat. Eshie confirms the details
-                  before submitting — nothing is written without a human reading what will be created.
-                </p>
-                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                  {[
-                    { action: "Log note", eg: "\"Log that client confirmed surgery on Sep 3\"" },
-                    { action: "Create task", eg: "\"Add a task to request updated bills by Friday\"" },
-                  ].map(({ action, eg }) => (
-                    <div key={action} style={{ padding: "10px 14px", borderRadius: 6, background: "rgba(200,169,110,0.06)", border: "1px solid rgba(200,169,110,0.15)" }}>
-                      <div style={{ fontFamily: S.mono, fontSize: 10, color: S.accent, letterSpacing: "0.1em", marginBottom: 4 }}>{action}</div>
-                      <div style={{ fontFamily: S.mono, fontSize: 11, color: S.dim, fontStyle: "italic" }}>{eg}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* ── INTEGRATIONS ── */}
         <section style={{ padding: "100px 0", borderBottom: `1px solid ${S.border}` }} id="integrations">
           <div style={wrap()}>
@@ -397,7 +300,7 @@ export default function EshiePage() {
               Connects to what the firm already uses.
             </h2>
             <p style={{ fontSize: 16, color: S.dim, lineHeight: 1.8, maxWidth: 620, marginBottom: 56 }}>
-              No new software to adopt for the firm. Eshie plugs into CASEpeer, Dropbox, and Microsoft via
+              No new software to adopt for the firm. Eshie plugs into CASEpeer, Dropbox, and Google via
               Zapier — the tools Esh Law Group already runs on. Data flows in automatically; nothing requires
               a manual export or import.
             </p>
@@ -467,10 +370,10 @@ export default function EshiePage() {
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0 }} className="eshie-2col">
                 <div style={{ padding: "24px", borderRight: `1px solid ${S.border}` }}>
-                  <div style={{ fontFamily: S.mono, fontSize: 10, color: S.accent, letterSpacing: "0.1em", marginBottom: 12 }}>MICROSOFT SIGN-IN</div>
+                  <div style={{ fontFamily: S.mono, fontSize: 10, color: S.accent, letterSpacing: "0.1em", marginBottom: 12 }}>GOOGLE SIGN-IN</div>
                   <p style={{ fontSize: 14, color: S.dim, lineHeight: 1.75 }}>
-                    Staff sign in with their existing Microsoft accounts. No separate Eshie password to manage.
-                    Azure OAuth2 — the same authentication the firm already uses for Outlook and Teams.
+                    Staff sign in with their existing Google accounts. No separate Eshie password to manage.
+                    Google OAuth2 — the same authentication the firm already uses for email and Drive.
                   </p>
                 </div>
                 <div style={{ padding: "24px" }}>
@@ -493,7 +396,7 @@ export default function EshiePage() {
               {[
                 "React · Vite", "Tailwind CSS", "FastAPI", "Python",
                 "PostgreSQL", "psycopg2", "Claude Sonnet", "Anthropic API",
-                "python-jose (JWT)", "Microsoft Azure AD",
+                "python-jose (JWT)", "Google OAuth2",
                 "Vercel (frontend)", "Render (backend + database)",
                 "Zapier (4 Zaps)", "CASEpeer API", "Dropbox",
               ].map((s) => <span key={s} className="hover-pill" style={pill()}>{s}</span>)}
