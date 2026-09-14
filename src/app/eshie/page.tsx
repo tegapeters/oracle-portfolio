@@ -44,13 +44,13 @@ const FEATURES = [
   {
     n: "02",
     title: "Morning brief",
-    body: "Every morning, each staff member gets a personalized rundown: deadlines today, overnight messages that need a response, and unreviewed documents waiting in Dropbox.",
+    body: "Every morning, each staff member gets a personalized rundown: deadlines today, overnight messages that need a response, unreviewed documents in Dropbox — plus their own ‘Your Inbox’ section pulled live from their Gmail and Google Calendar.",
     detail: "Filtered per employee — you only see what's assigned to you",
   },
   {
     n: "03",
     title: "Log notes and tasks from chat",
-    body: "Staff can log case notes and create tasks directly through conversation. No context switching, no opening CASEpeer just to write a line.",
+    body: "Staff can log case notes and create tasks directly through conversation via a custom MCP server. No context switching, no opening CASEpeer just to write a line.",
     detail: "\"Log that we received medical records from Dr. Smith today\"",
   },
 ];
@@ -58,7 +58,8 @@ const FEATURES = [
 const INTEGRATIONS = [
   { name: "CASEpeer", desc: "Real-time case sync", detail: "New cases, status changes, leads, and messages pushed automatically via Zapier" },
   { name: "Dropbox", desc: "Document intake", detail: "New files in client folders detected and linked to the right case by folder name" },
-  { name: "Google", desc: "Team sign-in", detail: "Staff sign in with their existing Google accounts — no separate passwords" },
+  { name: "Google", desc: "Sign-in + personal inbox", detail: "Team sign-in plus per-user Gmail and Calendar read access for the personalized brief" },
+  { name: "Microsoft Teams", desc: "Daily brief channel", detail: "The firm-wide brief auto-posts as an Adaptive Card every weekday morning" },
   { name: "Zapier", desc: "Workflow automation", detail: "4 live Zaps connect CASEpeer and Dropbox events to Eshie in real time" },
 ];
 
@@ -204,6 +205,7 @@ export default function EshiePage() {
                   "210 cases imported day one",
                   "4 Zapier Zaps running",
                   "Google SSO for the team",
+                  "Daily brief posted to Teams",
                 ].map((chip) => (
                   <span key={chip} className="hover-pill" style={{ ...pill(), border: "1px solid rgba(200,169,110,0.35)", color: S.accent, background: "rgba(200,169,110,0.08)", fontSize: 12 }}>
                     {chip}
@@ -256,7 +258,7 @@ export default function EshiePage() {
             <div style={{ maxWidth: 780, borderLeft: `3px solid ${S.accent}`, paddingLeft: 24 }}>
               <div style={{ ...tag({ color: S.accent, marginBottom: 12 }) }}>// WHY ESHIE EXISTS</div>
               <p style={{ fontSize: 15, color: S.fg, lineHeight: 1.85 }}>
-                Personal injury case files span CASEpeer, Dropbox, Outlook, and handwritten notes. Getting a full
+                Personal injury case files span CASEpeer, Dropbox, Gmail, and handwritten notes. Getting a full
                 picture of a single client means opening multiple systems, hunting through folders, and reading
                 through history. Eshie connects those sources and surfaces the answer to a plain-English question
                 in seconds — so staff spend time on cases, not on finding information about them.
@@ -305,7 +307,7 @@ export default function EshiePage() {
               a manual export or import.
             </p>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 16, marginBottom: 48 }} className="eshie-4col">
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 16, marginBottom: 48 }} className="eshie-4col">
               {INTEGRATIONS.map((int, i) => (
                 <div key={int.name} className={`hover-card reveal reveal-delay-${i + 1}`} style={card({ textAlign: "center" })}>
                   <div style={{ fontFamily: S.mono, fontSize: 15, color: S.fg, fontWeight: 600, marginBottom: 6 }}>{int.name}</div>
@@ -337,6 +339,25 @@ export default function EshiePage() {
                   <div style={{ fontSize: 13, color: S.dim }}>{zap.action}</div>
                 </div>
               ))}
+            </div>
+
+            {/* Teams brief detail */}
+            <div style={{ ...card({ padding: 0, overflow: "hidden", marginTop: 16 }) }}>
+              <div style={{ background: S.surface, borderBottom: `1px solid ${S.border}`, padding: "16px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div style={{ fontFamily: S.mono, fontSize: 10, color: S.dimmer, letterSpacing: "0.12em" }}>MICROSOFT TEAMS · DAILY BRIEF</div>
+                <div style={{ fontFamily: S.mono, fontSize: 9, padding: "3px 10px", borderRadius: 10, border: "1px solid rgba(200,169,110,0.28)", color: S.accent, letterSpacing: "0.1em" }}>LIVE · WEEKDAYS 8AM</div>
+              </div>
+              <div style={{ padding: "18px 24px" }}>
+                <p style={{ fontSize: 13, color: S.dim, lineHeight: 1.75 }}>
+                  A scheduled trigger calls a Power Automate webhook every weekday morning, which posts the
+                  firm-wide brief to the Daily Brief channel as an interactive Adaptive Card — no one has to
+                  open Eshie to see what&apos;s due today.
+                </p>
+                <p style={{ fontSize: 12, color: S.dimmer, lineHeight: 1.7, marginTop: 10 }}>
+                  Also built: an @mention/DM Teams bot for ad-hoc case Q&amp;A on the Bot Framework — code-complete,
+                  pending Azure Bot activation.
+                </p>
+              </div>
             </div>
           </div>
         </section>
@@ -395,10 +416,11 @@ export default function EshiePage() {
             <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
               {[
                 "React · Vite", "Tailwind CSS", "FastAPI", "Python",
-                "PostgreSQL", "psycopg2", "Claude Sonnet", "Anthropic API",
-                "python-jose (JWT)", "Google OAuth2",
+                "PostgreSQL", "psycopg2", "Claude Sonnet", "Anthropic API", "MCP",
+                "python-jose (JWT)", "Google OAuth2", "Gmail + Calendar API",
                 "Vercel (frontend)", "Render (backend + database)",
                 "Zapier (4 Zaps)", "CASEpeer API", "Dropbox",
+                "Microsoft Teams", "Power Automate", "Bot Framework",
               ].map((s) => <span key={s} className="hover-pill" style={pill()}>{s}</span>)}
             </div>
           </div>
