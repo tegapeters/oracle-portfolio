@@ -38,19 +38,25 @@ const FEATURES = [
   {
     n: "01",
     title: "Live case briefs",
-    body: "Ask about any client in plain English. Eshie pulls current status, open tasks, recent notes, client messages, and documents on file — all in one attorney-ready summary.",
+    body: "Ask about any client in plain English. Eshie streams the answer token-by-token, pulling current status, open tasks, recent notes, client texts, calls, and documents on file — all in one attorney-ready summary.",
     detail: "\"What's the status on Johnson?\" → full case brief in seconds",
   },
   {
     n: "02",
-    title: "Morning brief",
-    body: "Every morning, each staff member gets a personalized rundown: deadlines today, overnight messages that need a response, unreviewed documents in Dropbox — plus their own ‘Your Inbox’ section pulled live from their Gmail and Google Calendar.",
-    detail: "Filtered per employee — you only see what's assigned to you",
+    title: "Statute of Limitations tracking",
+    body: "Every morning brief leads with SOL deadlines — cases within about 60 days or already overdue — across all 227 imported cases. The single highest-stakes date in personal injury work is never buried in a list.",
+    detail: "The safety upgrade: SOL dates surface before anything else",
   },
   {
     n: "03",
-    title: "Log notes and tasks from chat",
-    body: "Staff can log case notes and create tasks directly through conversation via a custom MCP server. No context switching, no opening CASEpeer just to write a line.",
+    title: "Morning brief",
+    body: "Each staff member also gets a personalized rundown: today's deadlines, unreviewed documents, and a triaged ‘Your Inbox’ — needs-attention vs. FYI — pulled live from their own Gmail and Google Calendar.",
+    detail: "Filtered per employee — you only see what's assigned to you",
+  },
+  {
+    n: "04",
+    title: "Approve-to-act from chat",
+    body: "Staff can log case notes, create tasks, and clear documents from the review queue directly through conversation — in the app or in Microsoft Teams. Every action is staged and shown before it happens; nothing runs without a click.",
     detail: "\"Log that we received medical records from Dr. Smith today\"",
   },
 ];
@@ -58,9 +64,11 @@ const FEATURES = [
 const INTEGRATIONS = [
   { name: "CASEpeer", desc: "Real-time case sync", detail: "New cases, status changes, leads, and messages pushed automatically via Zapier" },
   { name: "Dropbox", desc: "Document intake", detail: "New files in client folders detected and linked to the right case by folder name" },
+  { name: "Kenect", desc: "Client texting", detail: "Inbound SMS linked to a case by phone number and surfaced in the brief and chat" },
+  { name: "RingCentral", desc: "Calls + fax", detail: "Call and fax activity linked to a case by phone number — direction, duration, result" },
   { name: "Google", desc: "Sign-in + personal inbox", detail: "Team sign-in plus per-user Gmail and Calendar read access for the personalized brief" },
-  { name: "Microsoft Teams", desc: "Daily brief channel", detail: "The firm-wide brief auto-posts as an Adaptive Card every weekday morning" },
-  { name: "Zapier", desc: "Workflow automation", detail: "4 live Zaps connect CASEpeer and Dropbox events to Eshie in real time" },
+  { name: "Microsoft Teams", desc: "Daily brief + bot", detail: "Adaptive Card brief every weekday morning, plus a live @mention bot for case Q&A" },
+  { name: "Zapier", desc: "Workflow automation", detail: "6 live Zaps connect CASEpeer, Dropbox, Kenect, and RingCentral events to Eshie in real time" },
 ];
 
 const HOW_IT_WORKS = [
@@ -72,7 +80,7 @@ const HOW_IT_WORKS = [
 
 const TRUST_POINTS = [
   { title: "Your data, your server", body: "Eshie runs on your own backend. Case data stays in your Postgres database — it never leaves your infrastructure." },
-  { title: "Read before it writes", body: "Notes and tasks are shown to staff before being submitted. Nothing is created without a confirmation." },
+  { title: "Read before it writes", body: "Case notes, tasks, and document-review clearing are all staged and shown to staff before submitting. Nothing is created or changed without a confirmation." },
   { title: "Per-user briefs", body: "Each employee sees only what's assigned to them. The morning brief is filtered to your name before it's shown." },
   { title: "Audit trail", body: "Every note and task created through chat is stamped with who created it, the same as a direct CASEpeer entry." },
 ];
@@ -196,16 +204,16 @@ export default function EshiePage() {
               </h1>
               <p className="hero-body" style={{ fontSize: 16, color: S.dim, lineHeight: 1.8, maxWidth: 520, marginBottom: 36 }}>
                 Eshie is an AI assistant built specifically for Esh Law Group. Staff ask questions in plain
-                English and get live, accurate case briefs — status, open tasks, recent notes, client messages,
-                and documents on file — pulled from CASEpeer and Dropbox in real time.
+                English and get live, accurate case briefs — status, open tasks, recent notes, texts, calls,
+                and documents on file — streamed back in real time from CASEpeer, Dropbox, Kenect, and RingCentral.
               </p>
               <div className="hero-chips" style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 40 }}>
                 {[
                   "Live since 2026",
-                  "210 cases imported day one",
-                  "4 Zapier Zaps running",
+                  "227 cases enriched with SOL dates",
+                  "Live Teams bot + daily brief",
+                  "Kenect texts + RingCentral calls",
                   "Google SSO for the team",
-                  "Daily brief posted to Teams",
                 ].map((chip) => (
                   <span key={chip} className="hover-pill" style={{ ...pill(), border: "1px solid rgba(200,169,110,0.35)", color: S.accent, background: "rgba(200,169,110,0.08)", fontSize: 12 }}>
                     {chip}
@@ -258,7 +266,7 @@ export default function EshiePage() {
             <div style={{ maxWidth: 780, borderLeft: `3px solid ${S.accent}`, paddingLeft: 24 }}>
               <div style={{ ...tag({ color: S.accent, marginBottom: 12 }) }}>// WHY ESHIE EXISTS</div>
               <p style={{ fontSize: 15, color: S.fg, lineHeight: 1.85 }}>
-                Personal injury case files span CASEpeer, Dropbox, Gmail, and handwritten notes. Getting a full
+                Personal injury case files span CASEpeer, Dropbox, Gmail, client texts, and call logs. Getting a full
                 picture of a single client means opening multiple systems, hunting through folders, and reading
                 through history. Eshie connects those sources and surfaces the answer to a plain-English question
                 in seconds — so staff spend time on cases, not on finding information about them.
@@ -272,9 +280,9 @@ export default function EshiePage() {
           <div style={wrap()}>
             <div style={{ ...tag(), marginBottom: 14 }}>// WHAT ESHIE DOES</div>
             <h2 style={{ fontSize: "clamp(26px,3.5vw,42px)", fontWeight: 300, letterSpacing: "-0.02em", lineHeight: 1.2, marginBottom: 56, color: S.fg }}>
-              Three things your team will use every day.
+              What your team uses every day.
             </h2>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 20 }} className="eshie-3col">
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 20 }} className="eshie-3col">
               {FEATURES.map((f, i) => (
                 <div key={f.n} className={`hover-card reveal reveal-delay-${i + 1}`} style={card()}>
                   <div style={{ fontFamily: S.mono, fontSize: 11, color: S.accent, marginBottom: 14, letterSpacing: "0.1em" }}>{f.n}</div>
@@ -302,9 +310,9 @@ export default function EshiePage() {
               Connects to what the firm already uses.
             </h2>
             <p style={{ fontSize: 16, color: S.dim, lineHeight: 1.8, maxWidth: 620, marginBottom: 56 }}>
-              No new software to adopt for the firm. Eshie plugs into CASEpeer, Dropbox, and Google via
-              Zapier — the tools Esh Law Group already runs on. Data flows in automatically; nothing requires
-              a manual export or import.
+              No new software to adopt for the firm. Eshie plugs into CASEpeer, Dropbox, Kenect, RingCentral,
+              and Google via Zapier — the tools Esh Law Group already runs on. Data flows in automatically;
+              nothing requires a manual export or import.
             </p>
 
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 16, marginBottom: 48 }} className="eshie-4col">
@@ -321,17 +329,19 @@ export default function EshiePage() {
             <div style={{ ...card({ padding: 0, overflow: "hidden" }) }}>
               <div style={{ background: S.surface, borderBottom: `1px solid ${S.border}`, padding: "16px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <div style={{ fontFamily: S.mono, fontSize: 10, color: S.dimmer, letterSpacing: "0.12em" }}>LIVE ZAPIER ZAPS</div>
-                <div style={{ fontFamily: S.mono, fontSize: 9, padding: "3px 10px", borderRadius: 10, border: "1px solid rgba(200,169,110,0.28)", color: S.accent, letterSpacing: "0.1em" }}>4 ACTIVE</div>
+                <div style={{ fontFamily: S.mono, fontSize: 9, padding: "3px 10px", borderRadius: 10, border: "1px solid rgba(200,169,110,0.28)", color: S.accent, letterSpacing: "0.1em" }}>6 ACTIVE</div>
               </div>
               {[
                 { n: "01", name: "New case in CASEpeer", action: "→ Inserted into Eshie Postgres in real time" },
                 { n: "02", name: "Case status changed", action: "→ Status + history updated automatically" },
                 { n: "03", name: "New lead submitted", action: "→ Lead record created with contact info and case type" },
                 { n: "04", name: "New file added to Dropbox", action: "→ Document linked to the right case by folder name" },
+                { n: "05", name: "New Kenect text message", action: "→ Linked to a case by phone, surfaced in the brief" },
+                { n: "06", name: "RingCentral call or fax", action: "→ Call record linked to a case by phone number" },
               ].map((zap, i) => (
                 <div key={zap.n} style={{
                   display: "grid", gridTemplateColumns: "40px 1fr 1fr",
-                  padding: "14px 24px", borderBottom: i < 3 ? `1px solid ${S.border}` : "none",
+                  padding: "14px 24px", borderBottom: i < 5 ? `1px solid ${S.border}` : "none",
                   alignItems: "center", gap: 16,
                 }}>
                   <div style={{ fontFamily: S.mono, fontSize: 10, color: S.dimmer }}>{zap.n}</div>
@@ -354,8 +364,8 @@ export default function EshiePage() {
                   open Eshie to see what&apos;s due today.
                 </p>
                 <p style={{ fontSize: 12, color: S.dimmer, lineHeight: 1.7, marginTop: 10 }}>
-                  Also built: an @mention/DM Teams bot for ad-hoc case Q&amp;A on the Bot Framework — code-complete,
-                  pending Azure Bot activation.
+                  Also live: an @mention/DM Teams bot for ad-hoc case Q&amp;A on the Bot Framework, single-tenant,
+                  with short per-conversation memory so a bare follow-up (&ldquo;the auto accident one&rdquo;) still resolves.
                 </p>
               </div>
             </div>
@@ -417,9 +427,9 @@ export default function EshiePage() {
               {[
                 "React · Vite", "Tailwind CSS", "FastAPI", "Python",
                 "PostgreSQL", "psycopg2", "Claude Sonnet", "Anthropic API", "MCP",
-                "python-jose (JWT)", "Google OAuth2", "Gmail + Calendar API",
+                "SSE streaming", "python-jose (JWT)", "Google OAuth2", "Gmail + Calendar API",
                 "Vercel (frontend)", "Render (backend + database)",
-                "Zapier (4 Zaps)", "CASEpeer API", "Dropbox",
+                "Zapier (6 Zaps)", "CASEpeer API", "Dropbox", "Kenect", "RingCentral",
                 "Microsoft Teams", "Power Automate", "Bot Framework",
               ].map((s) => <span key={s} className="hover-pill" style={pill()}>{s}</span>)}
             </div>
