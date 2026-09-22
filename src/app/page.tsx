@@ -393,18 +393,18 @@ export default function Page() {
           <div style={{ ...wrap(), display: "grid", gridTemplateColumns: "1fr 300px", gap: 60, alignItems: "center" }} className="hero-grid">
             <div>
               <div className="hero-tag" style={{ ...tagStyle({ color: S.accent }), marginBottom: 24 }}>
-                DATA ENGINEERING · UPTIME &amp; RELIABILITY AUTOMATION · OCI ANALYTICS · GOVERNED GENAI WORKFLOWS
+                AI / ML ENGINEER · DATA ENGINEERING · APPLIED GENAI &amp; AUTOMATION
               </div>
               <h1 className="hero-h1" style={{ fontSize: "clamp(32px,4vw,52px)", fontWeight: 300, lineHeight: 1.2, letterSpacing: "-0.025em", marginBottom: 28, color: S.fg }}>
                 Operational systems that turn fragmented evidence into{" "}
                 <em style={{ fontStyle: "italic", color: S.accent }}>decision-ready insight.</em>
               </h1>
               <p className="hero-body" style={{ fontSize: 16, color: S.dim, lineHeight: 1.8, maxWidth: 540, marginBottom: 36 }}>
-                Data engineer specializing in production analytics automation, cloud-delivered operational
-                intelligence, and governed GenAI workflows at Oracle. Builds Python/SQL pipelines,
-                reconciliation controls, and secure OCI analytics applications that turn Jira, service
-                telemetry, Event Assessment, Slack, and Confluence evidence into trusted uptime reporting
-                and source-backed incident artifacts.
+                AI/ML and data engineer who builds production GenAI systems and automated data pipelines
+                that replace manual, spreadsheet-driven work with governed, source-verified tooling.
+                Designs and ships LLM-powered agents, RAG-style evidence pipelines, and cloud analytics
+                platforms on Oracle Cloud Infrastructure that cut reporting cycles from days to hours and
+                give teams trusted, auditable data instead of manual reconciliation.
               </p>
               <div className="hero-chips" style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
                 {[
@@ -1236,9 +1236,9 @@ export default function Page() {
               <em style={{ fontStyle: "italic", color: S.accent }}>people can trust.</em>
             </h2>
             <p style={{ fontSize: 16, color: S.dim, lineHeight: 1.8, marginBottom: 44 }}>
-              I work at the intersection of data engineering, service operations, and governed GenAI — turning
-              complex operational evidence into reporting and workflows that are faster to run, easier to review,
-              and safer to scale.
+              I build production AI/ML systems and automated data pipelines at the intersection of data engineering,
+              GenAI, and cloud infrastructure — turning complex operational evidence into reporting and workflows
+              that are faster to run, easier to review, and safer to scale.
             </p>
             <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
               <a href="/resume.pdf" download style={{ fontFamily: S.mono, fontSize: 12, letterSpacing: "0.08em", padding: "11px 22px", borderRadius: 4, border: `1px solid ${S.border}`, color: S.fg, textDecoration: "none" }}>
