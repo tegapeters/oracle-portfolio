@@ -195,7 +195,7 @@ export default function EshiePage() {
           <div style={{ ...wrap(), display: "grid", gridTemplateColumns: "1fr 380px", gap: 60, alignItems: "center" }} className="hero-grid">
             <div>
               <div className="hero-tag" style={{ ...tag({ color: S.accent }), marginBottom: 24 }}>
-                AI CASE ASSISTANT · ESH LAW GROUP · PERSONAL INJURY
+                AI CASE ASSISTANT · LEGAL OPS · PERSONAL INJURY
               </div>
               <h1 className="hero-h1" style={{ fontSize: "clamp(32px,4vw,54px)", fontWeight: 300, lineHeight: 1.15, letterSpacing: "-0.025em", marginBottom: 28, color: S.fg }}>
                 Ask about any client.<br />
@@ -203,14 +203,15 @@ export default function EshiePage() {
                 <em style={{ fontStyle: "italic", color: S.accent }}>instantly.</em>
               </h1>
               <p className="hero-body" style={{ fontSize: 16, color: S.dim, lineHeight: 1.8, maxWidth: 520, marginBottom: 36 }}>
-                Eshie is an AI assistant built specifically for Esh Law Group. Staff ask questions in plain
+                Eshie is an AI assistant built for a personal injury law firm. Staff ask questions in plain
                 English and get live, accurate case briefs — status, open tasks, recent notes, texts, calls,
-                and documents on file — streamed back in real time from CASEpeer, Dropbox, Kenect, and RingCentral.
+                and documents on file — streamed back in real time from connected case management, document,
+                and communication systems.
               </p>
               <div className="hero-chips" style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 40 }}>
                 {[
                   "Live since 2026",
-                  "227 cases enriched with SOL dates",
+                  "Full case library enriched with SOL dates",
                   "Live Teams bot + daily brief",
                   "Kenect texts + RingCentral calls",
                   "Google SSO for the team",
@@ -247,7 +248,7 @@ export default function EshiePage() {
                   {/* Eshie brief */}
                   <div style={{ alignSelf: "flex-start", maxWidth: "95%" }}>
                     <div style={{ background: S.surface, border: `1px solid ${S.border}`, borderRadius: "12px 12px 12px 3px", padding: "14px 16px", fontSize: 12, color: S.dim, lineHeight: 1.65 }}>
-                      <div style={{ fontFamily: S.mono, fontSize: 9, color: S.accent, letterSpacing: "0.1em", marginBottom: 10 }}>JOHNSON, MARCUS · PI · CASE #8821</div>
+                      <div style={{ fontFamily: S.mono, fontSize: 9, color: S.accent, letterSpacing: "0.1em", marginBottom: 10 }}>JOHNSON, MARCUS · PI · ACTIVE CASE</div>
                       <div style={{ color: S.fg, fontWeight: 500, marginBottom: 6 }}>Status: Treatment — Ongoing</div>
                       <div style={{ marginBottom: 6 }}><span style={{ color: S.accent }}>Open tasks:</span> Follow up with Dr. Patel re MRI (due today) · Demand letter draft pending</div>
                       <div style={{ marginBottom: 6 }}><span style={{ color: S.accent }}>Last note:</span> Client called 8/22 — still treating, no settlement discussion yet</div>
@@ -310,8 +311,8 @@ export default function EshiePage() {
               Connects to what the firm already uses.
             </h2>
             <p style={{ fontSize: 16, color: S.dim, lineHeight: 1.8, maxWidth: 620, marginBottom: 56 }}>
-              No new software to adopt for the firm. Eshie plugs into CASEpeer, Dropbox, Kenect, RingCentral,
-              and Google via Zapier — the tools Esh Law Group already runs on. Data flows in automatically;
+              No new software to adopt for the firm. Eshie plugs into the case management, document, texting,
+              call, and productivity tools the firm already runs on. Data flows in automatically;
               nothing requires a manual export or import.
             </p>
 
@@ -355,13 +356,12 @@ export default function EshiePage() {
             <div style={{ ...card({ padding: 0, overflow: "hidden", marginTop: 16 }) }}>
               <div style={{ background: S.surface, borderBottom: `1px solid ${S.border}`, padding: "16px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <div style={{ fontFamily: S.mono, fontSize: 10, color: S.dimmer, letterSpacing: "0.12em" }}>MICROSOFT TEAMS · DAILY BRIEF</div>
-                <div style={{ fontFamily: S.mono, fontSize: 9, padding: "3px 10px", borderRadius: 10, border: "1px solid rgba(200,169,110,0.28)", color: S.accent, letterSpacing: "0.1em" }}>LIVE · WEEKDAYS 8AM</div>
+                <div style={{ fontFamily: S.mono, fontSize: 9, padding: "3px 10px", borderRadius: 10, border: "1px solid rgba(200,169,110,0.28)", color: S.accent, letterSpacing: "0.1em" }}>LIVE · WEEKDAYS</div>
               </div>
               <div style={{ padding: "18px 24px" }}>
                 <p style={{ fontSize: 13, color: S.dim, lineHeight: 1.75 }}>
-                  A scheduled trigger calls a Power Automate webhook every weekday morning, which posts the
-                  firm-wide brief to the Daily Brief channel as an interactive Adaptive Card — no one has to
-                  open Eshie to see what&apos;s due today.
+                  A scheduled daily trigger posts the firm-wide brief to the Daily Brief channel as an
+                  interactive Adaptive Card — no one has to open Eshie to see what&apos;s due today.
                 </p>
                 <p style={{ fontSize: 12, color: S.dimmer, lineHeight: 1.7, marginTop: 10 }}>
                   Also live: an @mention/DM Teams bot for ad-hoc case Q&amp;A on the Bot Framework, single-tenant,
@@ -427,10 +427,9 @@ export default function EshiePage() {
               {[
                 "React · Vite", "Tailwind CSS", "FastAPI", "Python",
                 "PostgreSQL", "psycopg2", "Claude Sonnet", "Anthropic API", "MCP",
-                "SSE streaming", "python-jose (JWT)", "Google OAuth2", "Gmail + Calendar API",
-                "Vercel (frontend)", "Render (backend + database)",
-                "Zapier (6 Zaps)", "CASEpeer API", "Dropbox", "Kenect", "RingCentral",
-                "Microsoft Teams", "Power Automate", "Bot Framework",
+                "SSE streaming", "JWT auth", "Google OAuth2", "Gmail + Calendar API",
+                "Cloud deployment", "Zapier", "CASEpeer API", "Dropbox",
+                "Kenect", "RingCentral", "Microsoft Teams", "Bot Framework",
               ].map((s) => <span key={s} className="hover-pill" style={pill()}>{s}</span>)}
             </div>
           </div>
