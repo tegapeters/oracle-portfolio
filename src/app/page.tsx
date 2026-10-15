@@ -400,7 +400,7 @@ export default function Page() {
                 <em style={{ fontStyle: "italic", color: S.accent }}>decision-ready insight.</em>
               </h1>
               <p className="hero-body" style={{ fontSize: 16, color: S.dim, lineHeight: 1.8, maxWidth: 540, marginBottom: 36 }}>
-                AI/ML and data engineer with an MS in Data Science who builds production GenAI systems
+                AI/ML and data engineer with an MS in Computer Information Systems (Data Science concentration) who builds production GenAI systems
                 and automated data pipelines that replace manual, spreadsheet-driven work with governed,
                 source-verified tooling.
                 Designs and ships LLM-powered agents, RAG-style evidence pipelines, and cloud analytics
